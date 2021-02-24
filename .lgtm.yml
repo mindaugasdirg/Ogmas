@@ -5,6 +5,7 @@ extraction:
     prepare:
       packages:
         - nodejs
+        - npm
     index:
       dotnet:
         version: 3.1.406
