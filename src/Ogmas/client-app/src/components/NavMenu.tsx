@@ -2,6 +2,7 @@ import React from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import { LoginMenu } from './authorization/LoginMenu';
 
 export const NavMenu = () => {
   const [collapsed, setCollapsed] = React.useState(true);
@@ -27,6 +28,7 @@ export const NavMenu = () => {
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
               </NavItem>
+              <LoginMenu/>
             </ul>
           </Collapse>
         </Container>
