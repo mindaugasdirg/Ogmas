@@ -32,7 +32,7 @@ export const Logout = (props: Props) => {
     // const [authenticated, setAuthenticated] = React.useState(false);
 
     const populateAuthenticationState = async () => {
-        const authenticated = await isAuthenticated();
+        await isAuthenticated();
         setIsReady(true);
         // setAuthenticated(authenticated);
     }
