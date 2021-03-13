@@ -6,5 +6,8 @@ namespace Ogmas.Models.Entities
     {
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public bool Ready { get; set; }
     }
 }
