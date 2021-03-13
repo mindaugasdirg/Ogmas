@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Ogmas.Models
+namespace Ogmas.Models.Entities
 {
     public class User : IdentityUser
     {
