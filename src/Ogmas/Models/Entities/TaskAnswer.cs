@@ -14,6 +14,6 @@ namespace Ogmas.Models.Entities
 
         [ForeignKey("GameTaskId")]
         public GameTask GameTask { get; set; }
-        public Guid GameTaskId { get; set; }
+        public string GameTaskId { get; set; }
     }
 }

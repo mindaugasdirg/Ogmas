@@ -13,6 +13,6 @@ namespace Ogmas.Models.Entities
         [ForeignKey("GameId")]
         [Required]
         public Game Game { get; set; }
-        public Guid GameId { get; set; }
+        public string GameId { get; set; }
     }
 }

@@ -10,10 +10,10 @@ namespace Ogmas.Models.Entities
 
         [ForeignKey("GameTypeId")]
         public Game GameType { get; set; }
-        public Guid GameTypeId { get; set; }
+        public string GameTypeId { get; set; }
 
         [ForeignKey("OrganizerId")]
         public User Organizer { get; set; }
-        public Guid OrganizerId { get; set; }
+        public string OrganizerId { get; set; }
     }
 }

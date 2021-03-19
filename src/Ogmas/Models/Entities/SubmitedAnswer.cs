@@ -7,14 +7,14 @@ namespace Ogmas.Models.Entities
     {
         [ForeignKey("GameId")]
         public OrganizedGame Game { get; set; }
-        public Guid GameId { get; set; }
+        public string GameId { get; set; }
 
         [ForeignKey("PlayerId")]
         public GameParticipant Player { get; set; }
-        public Guid PlayerId { get; set; }
+        public string PlayerId { get; set; }
 
         [ForeignKey("PickedAnswerId")]
         public TaskAnswer PickedAnswer { get; set; }
-        public Guid PickedAnswerId { get; set; }
+        public string PickedAnswerId { get; set; }
     }
 }
