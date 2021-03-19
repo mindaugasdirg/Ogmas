@@ -11,9 +11,9 @@ namespace Ogmas.Repositories
         {
         }
 
-        public async Task<IEnumerable<GameTask>> GetTasksByGame(Guid gameId)
+        public IEnumerable<GameTask> GetTasksByGame(string gameId)
         {
-            return await Filter(x => x.GameId == gameId);
+            return Filter(x => x.GameId == gameId);
         }
     }
 }

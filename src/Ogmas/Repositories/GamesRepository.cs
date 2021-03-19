@@ -10,14 +10,14 @@ namespace Ogmas.Repositories
         {
         }
 
-        public async Task<IEnumerable<Game>> SearchGamesByName(string name)
+        public IEnumerable<Game> SearchGamesByName(string name)
         {
-            return await Filter(x => x.Name.Contains(name) && x.Ready);
+            return Filter(x => x.Name.Contains(name) && x.Ready);
         }
 
-        public async Task<IEnumerable<Game>> GetReadyGames()
+        public IEnumerable<Game> GetReadyGames()
         {
-            return await Filter(x => x.Ready);
+            return Filter(x => x.Ready);
         }
     }
 }

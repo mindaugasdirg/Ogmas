@@ -32,7 +32,7 @@ namespace Ogmas.Repositories
             return entity.Entity;
         }
 
-        public async Task<T> Delete(Guid id)
+        public async Task<T> Delete(string id)
         {
             var item = await Get(id);
 
@@ -42,7 +42,7 @@ namespace Ogmas.Repositories
             return item;
         }
 
-        public async Task<T> Get(Guid id)
+        public async Task<T> Get(string id)
         {
             var item = await Context.Set<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
             if(item is null)
@@ -51,14 +51,14 @@ namespace Ogmas.Repositories
             return item;
         }
 
-        public async Task<IEnumerable<T>> Get()
+        public async Task<IEnumerable<T>> GetAll()
         {
             return await Context.Set<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> Filter(Func<T, bool> predicate)
+        public IEnumerable<T> Filter(Func<T, bool> predicate)
         {
-            return await Context.Set<T>().Where(predicate).AsQueryable<T>().ToListAsync();
+            return Context.Set<T>().Where(predicate).ToList();
         }
     }
 }

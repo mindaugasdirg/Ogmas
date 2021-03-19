@@ -11,14 +11,14 @@ namespace Ogmas.Repositories
         {
         }
 
-        public async Task<IEnumerable<OrganizedGame>> GetGamesByOrganizer(Guid organizerId)
+        public IEnumerable<OrganizedGame> GetGamesByOrganizer(string organizerId)
         {
-            return await Filter(x => x.OrganizerId == organizerId);
+            return Filter(x => x.OrganizerId == organizerId);
         }
 
-        public async Task<IEnumerable<OrganizedGame>> GetGamesByType(Guid gameTypeId)
+        public IEnumerable<OrganizedGame> GetGamesByType(string gameTypeId)
         {
-            return await Filter(x => x.GameTypeId == gameTypeId);
+            return Filter(x => x.GameTypeId == gameTypeId);
         }
     }
 }

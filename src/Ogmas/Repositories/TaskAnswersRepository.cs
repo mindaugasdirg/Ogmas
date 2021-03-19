@@ -11,9 +11,9 @@ namespace Ogmas.Repositories
         {
         }
 
-        public async Task<IEnumerable<TaskAnswer>> GetAnswersByQuestion(Guid questionId)
+        public IEnumerable<TaskAnswer> GetAnswersByQuestion(string questionId)
         {
-            return await Filter(x => x.GameTaskId == questionId);
+            return Filter(x => x.GameTaskId == questionId);
         }
     }
 }
