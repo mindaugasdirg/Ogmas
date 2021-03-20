@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ogmas.Models.Entities;
+using Ogmas.Repositories;
+using Ogmas.Services;
+using Ogmas.Services.Abstractions;
 
 namespace Ogmas
 {
@@ -24,6 +27,17 @@ namespace Ogmas
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase("MemoryDatabase"));
+
+            // repositories
+            services.AddTransient<GameParticipantsRepository>();
+            services.AddTransient<GamesRepository>();
+            services.AddTransient<GameTasksRepository>();
+            services.AddTransient<OrganizedGamesRepository>();
+            services.AddTransient<SubmitedAnswersRepository>();
+            services.AddTransient<TaskAnswersRepository>();
+
+            // services
+            services.AddTransient<IGamesService, GamesService>();
 
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<DatabaseContext>();
             services.AddIdentityServer().AddApiAuthorization<User, DatabaseContext>();
