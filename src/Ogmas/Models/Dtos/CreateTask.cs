@@ -8,6 +8,6 @@ namespace Ogmas.Models.Dtos
         [Required]
         public string Question { get; set; }
         public string Hint { get; set; }
-        public IEnumerable<object> Answers { get; set; }
+        public IEnumerable<CreateTaskAnswer> Answers { get; set; }
     }
 }

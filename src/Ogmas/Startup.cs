@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,7 @@ namespace Ogmas
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase("MemoryDatabase"));
+            services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConntectionString")));
 
             // repositories
             services.AddTransient<GameParticipantsRepository>();
@@ -37,9 +38,20 @@ namespace Ogmas
             services.AddTransient<TaskAnswersRepository>();
 
             // services
-            services.AddTransient<IGamesService, GamesService>();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddTransient<IGameTypesService, GameTypesService>();
+            services.AddTransient<IGameTasksService, GameTasksService>();
+            services.AddTransient<IAnswersService, AnswersService>();
 
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<DatabaseContext>();
+            services.AddDefaultIdentity<User>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 0;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<DatabaseContext>();
             services.AddIdentityServer().AddApiAuthorization<User, DatabaseContext>();
             services.AddAuthentication().AddIdentityServerJwt();
 

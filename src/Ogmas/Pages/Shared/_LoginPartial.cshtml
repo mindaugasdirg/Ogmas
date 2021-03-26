@@ -8,7 +8,7 @@
     var query = ViewContext.HttpContext.Request.Query;
     if (query.ContainsKey("returnUrl"))
     {
-        returnUrl = new Uri(query["returnUrl"]).ToString();
+        returnUrl = query["returnUrl"];
     }
 }
 

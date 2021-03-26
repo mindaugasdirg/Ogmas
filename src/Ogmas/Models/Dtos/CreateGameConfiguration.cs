@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Ogmas.Models.Dtos
 {
-    public class CreateGame
+    public class CreateGameConfiguration
     {
         [Required]
         public string Name { get; set; }

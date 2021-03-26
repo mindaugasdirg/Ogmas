@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ogmas.Models.Dtos;
@@ -9,14 +10,14 @@ using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Services
 {
-    public class GamesService : IGamesService
+    public class GameTypesService : IGameTypesService
     {
         private readonly IMapper mapper;
         private readonly GamesRepository gamesRepository;
         private readonly GameTasksRepository gameTasksRepository;
         private readonly TaskAnswersRepository taskAnswersRepository;
 
-        public GamesService(IMapper _mapper, GamesRepository _gamesRepository, GameTasksRepository _gameTasksRepository, TaskAnswersRepository _taskAnswersRepository)
+        public GameTypesService(IMapper _mapper, GamesRepository _gamesRepository, GameTasksRepository _gameTasksRepository, TaskAnswersRepository _taskAnswersRepository)
         {
             mapper = _mapper;
             gamesRepository = _gamesRepository;
@@ -24,12 +25,25 @@ namespace Ogmas.Services
             taskAnswersRepository = _taskAnswersRepository;
         }
 
-        public async Task CreateGame(CreateGame gameOptions)
+        public async Task<GameResponse> CreateGame(CreateGameConfiguration gameOptions)
         {
             var game = await gamesRepository.Add(mapper.Map<Game>(gameOptions));
             await CreateTasks(game.Id, gameOptions.Tasks);
             game.Ready = true;
             game = await gamesRepository.Update(game);
+            return mapper.Map<GameResponse>(game);
+        }
+
+        public async Task<IEnumerable<GameResponse>> GetGames()
+        {
+            var games = await gamesRepository.GetAll();
+            return games.Select(g => mapper.Map<GameResponse>(g));
+        }
+
+        public async Task<GameResponse> GetGame(string id)
+        {
+            var game = await gamesRepository.Get(id);
+            return mapper.Map<GameResponse>(game);
         }
 
         private async Task CreateTasks(string gameId, IEnumerable<CreateTask> tasks)
@@ -39,6 +53,7 @@ namespace Ogmas.Services
                 var task = mapper.Map<GameTask>(taskDto);
                 task.GameId = gameId;
                 var createdTask = await gameTasksRepository.Add(task);
+                await CreateAnswers(createdTask.Id, taskDto.Answers);
             }
         }
 
