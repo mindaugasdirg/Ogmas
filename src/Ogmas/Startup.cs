@@ -42,6 +42,7 @@ namespace Ogmas
             services.AddTransient<IGameTypesService, GameTypesService>();
             services.AddTransient<IGameTasksService, GameTasksService>();
             services.AddTransient<IAnswersService, AnswersService>();
+            services.AddTransient<IGamesService, GamesService>();
 
             services.AddDefaultIdentity<User>(options =>
             {

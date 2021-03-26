@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Ogmas.Models.Dtos
 {
     public class GameResponse
