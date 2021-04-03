@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ogmas.Models.Dtos;
+using Ogmas.Models.Dtos.Create;
+using Ogmas.Models.Dtos.Get;
 
 namespace Ogmas.Services.Abstractions
 {

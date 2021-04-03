@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Ogmas.Models.Dtos
+namespace Ogmas.Models.Dtos.Create
 {
     public class CreateTaskAnswer
     {

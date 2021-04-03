@@ -1,4 +1,4 @@
-namespace Ogmas.Models.Dtos
+namespace Ogmas.Models.Dtos.Get
 {
     public class GameResponse
     {

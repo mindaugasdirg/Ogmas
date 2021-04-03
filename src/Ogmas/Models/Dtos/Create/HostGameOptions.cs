@@ -1,13 +1,11 @@
 using System;
 
-namespace Ogmas.Models.Dtos
+namespace Ogmas.Models.Dtos.Create
 {
-    public class OrganizedGameResponse
+    public class HostGameOptions
     {
-        public string Id { get; set; }
         public DateTime StartTime { get; set; }
         public double StartInterval { get; set; }
         public string GameTypeId { get; set; }
-        public string OrganizerId { get; set; }
     }
 }

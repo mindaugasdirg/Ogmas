@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ogmas.Models.Dtos;
+using Ogmas.Models.Dtos.Create;
 using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Controllers

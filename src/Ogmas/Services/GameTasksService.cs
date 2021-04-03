@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ogmas.Models.Dtos;
+using Ogmas.Models.Dtos.Get;
 using Ogmas.Repositories;
 using Ogmas.Services.Abstractions;
 

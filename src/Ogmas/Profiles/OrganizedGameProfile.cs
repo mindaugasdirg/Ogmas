@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
-using Ogmas.Models.Dtos;
+using Ogmas.Models.Dtos.Create;
+using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
 using Ogmas.Profiles.ValueConverters;
 
