@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Ogmas.Models.Entities;
 
 namespace Ogmas.Repositories
@@ -10,6 +12,8 @@ namespace Ogmas.Repositories
         public SubmitedAnswersRepository(DatabaseContext context) : base(context)
         {
         }
+
+        protected override IQueryable<SubmitedAnswer> Query() => Context.SubmitedAnswers.Include(x => x.PickedAnswer).Include(x => x.Game).Include(x => x.Question);
 
         public IEnumerable<SubmitedAnswer> GetAnswersByPlayer(string playerId)
         {

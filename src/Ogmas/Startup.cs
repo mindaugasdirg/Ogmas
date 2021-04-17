@@ -1,3 +1,5 @@
+using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ogmas.Models.Entities;
+using Ogmas.Repositories;
+using Ogmas.Services;
+using Ogmas.Services.Abstractions;
 
 namespace Ogmas
 {
@@ -23,9 +28,33 @@ namespace Ogmas
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase("MemoryDatabase"));
+            services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConntectionString")));
 
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<DatabaseContext>();
+            // repositories
+            services.AddTransient<GameParticipantsRepository>();
+            services.AddTransient<GamesRepository>();
+            services.AddTransient<GameTasksRepository>();
+            services.AddTransient<OrganizedGamesRepository>();
+            services.AddTransient<SubmitedAnswersRepository>();
+            services.AddTransient<TaskAnswersRepository>();
+
+            // services
+            services.AddAutoMapper(typeof(Startup));
+            services.AddTransient<IGameTypesService, GameTypesService>();
+            services.AddTransient<IGameTasksService, GameTasksService>();
+            services.AddTransient<IAnswersService, AnswersService>();
+            services.AddTransient<IGamesService, GamesService>();
+            services.AddTransient<IPlayersService, PlayersService>();
+
+            services.AddDefaultIdentity<User>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 0;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<DatabaseContext>();
             services.AddIdentityServer().AddApiAuthorization<User, DatabaseContext>();
             services.AddAuthentication().AddIdentityServerJwt();
 
@@ -36,6 +65,8 @@ namespace Ogmas
             {
                 configuration.RootPath = "client-app/build";
             });
+
+            ApplyMigrations(services.BuildServiceProvider());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +110,15 @@ namespace Ogmas
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+        }
+
+        private void ApplyMigrations(IServiceProvider services)
+        {
+            using (var scope = services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+                db.Database.Migrate();
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Ogmas.Models.Entities;
 
 namespace Ogmas.Repositories
@@ -10,6 +12,8 @@ namespace Ogmas.Repositories
         public OrganizedGamesRepository(DatabaseContext context) : base(context)
         {
         }
+
+        protected override IQueryable<OrganizedGame> Query() => Context.OrganizedGames.Include(x => x.GameType);
 
         public IEnumerable<OrganizedGame> GetGamesByOrganizer(string organizerId)
         {

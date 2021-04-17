@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Moq.Protected;
 using NUnit.Framework;
 using Ogmas.Models.Entities;
 using Ogmas.Repositories;
@@ -83,9 +85,7 @@ namespace Ogmas.UnitTests.Repositories
                 IsDeleted = false,
                 Ready = true
             };
-            var entityRepositoryMock = new Mock<BaseEntityRepository<Game>>(_dbContext);
-            entityRepositoryMock.CallBase = true;
-            var entityRepository = entityRepositoryMock.Object;
+            var entityRepository = new GamesRepository(_dbContext);
             var added = await entityRepository.Add(item);
 
             var deleted = await entityRepository.Delete(added.Id);
@@ -112,22 +112,20 @@ namespace Ogmas.UnitTests.Repositories
                 IsDeleted = false,
                 Ready = true
             };
-            var entityRepositoryMock = new Mock<BaseEntityRepository<Game>>(_dbContext);
-            entityRepositoryMock.CallBase = true;
-            var entityRepository = entityRepositoryMock.Object;
+            var entityRepository = new GamesRepository(_dbContext);
             var added = await entityRepository.Add(item);
             await entityRepository.Add(item2);
 
-            var found = await entityRepository.Get(added.Id);
+            var found = entityRepository.Get(added.Id);
 
-            item.Id.ShouldBe(added.Id); 
-            item.IsDeleted.ShouldBe(added.IsDeleted); 
-            item.Name.ShouldBe(added.Name); 
-            item.Ready.ShouldBe(added.Ready); 
+            found.Id.ShouldBe(added.Id);
+            found.IsDeleted.ShouldBe(added.IsDeleted);
+            found.Name.ShouldBe(added.Name);
+            found.Ready.ShouldBe(added.Ready); 
         }
 
         [Test]
-        public async Task Get_WhenItemDoesNotExist_ShouldThrowArgumentException()
+        public async Task Get_WhenItemDoesNotExist_ShouldReturnNull()
         {
             var item = new Game()
             {
@@ -141,13 +139,13 @@ namespace Ogmas.UnitTests.Repositories
                 IsDeleted = false,
                 Ready = true
             };
-            var entityRepositoryMock = new Mock<BaseEntityRepository<Game>>(_dbContext);
-            entityRepositoryMock.CallBase = true;
-            var entityRepository = entityRepositoryMock.Object;
+            var entityRepository = new GamesRepository(_dbContext);
             var added = await entityRepository.Add(item);
             await entityRepository.Add(item2);
 
-            await Should.ThrowAsync<ArgumentException>(async () => await entityRepository.Get("not existing id"));
+            var result = entityRepository.Get("not existing id");
+
+            result.ShouldBeNull();
         }
         
         [Test]
@@ -165,13 +163,11 @@ namespace Ogmas.UnitTests.Repositories
                 IsDeleted = false,
                 Ready = true
             };
-            var entityRepositoryMock = new Mock<BaseEntityRepository<Game>>(_dbContext);
-            entityRepositoryMock.CallBase = true;
-            var entityRepository = entityRepositoryMock.Object;
+            var entityRepository = new GamesRepository(_dbContext);
             var added = await entityRepository.Add(item);
             await entityRepository.Add(item2);
 
-            var found = await entityRepository.GetAll();
+            var found = entityRepository.GetAll();
 
             found.Count().ShouldBe(2);
         }
@@ -197,9 +193,7 @@ namespace Ogmas.UnitTests.Repositories
                 IsDeleted = false,
                 Ready = false
             };
-            var entityRepositoryMock = new Mock<BaseEntityRepository<Game>>(_dbContext);
-            entityRepositoryMock.CallBase = true;
-            var entityRepository = entityRepositoryMock.Object;
+            var entityRepository = new GamesRepository(_dbContext);
             var added = await entityRepository.Add(item);
             await entityRepository.Add(item2);
             await entityRepository.Add(item3);

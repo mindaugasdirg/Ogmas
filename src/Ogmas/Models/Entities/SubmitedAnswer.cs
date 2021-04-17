@@ -13,6 +13,10 @@ namespace Ogmas.Models.Entities
         public GameParticipant Player { get; set; }
         public string PlayerId { get; set; }
 
+        [ForeignKey("QuestionId")]
+        public GameTask Question { get; set; }
+        public string QuestionId { get; set; }
+
         [ForeignKey("PickedAnswerId")]
         public TaskAnswer PickedAnswer { get; set; }
         public string PickedAnswerId { get; set; }

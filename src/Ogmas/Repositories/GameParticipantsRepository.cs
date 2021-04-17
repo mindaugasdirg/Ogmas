@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Ogmas.Models.Entities;
 
 namespace Ogmas.Repositories
@@ -11,9 +11,16 @@ namespace Ogmas.Repositories
         {
         }
 
+        protected override IQueryable<GameParticipant> Query() => Context.GameParticipants.Include(x => x.Game);
+
         public IEnumerable<GameParticipant> GetParticipantsByGame(string gameId)
         {
             return Filter(x => x.GameId == gameId);
+        }
+
+        public GameParticipant GetParticipantByGameAndUser(string gameId, string userId)
+        {
+            return Filter(x => x.GameId == gameId && x.PlayerId == userId).FirstOrDefault();
         }
     }
 }

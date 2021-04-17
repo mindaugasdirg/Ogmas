@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Ogmas.Models.Entities;
 
 namespace Ogmas.Repositories
@@ -9,6 +9,8 @@ namespace Ogmas.Repositories
         public GamesRepository(DatabaseContext context) : base(context)
         {
         }
+
+        protected override IQueryable<Game> Query() => Context.Games;
 
         public IEnumerable<Game> SearchGamesByName(string name)
         {
