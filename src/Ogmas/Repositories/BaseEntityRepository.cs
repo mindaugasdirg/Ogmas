@@ -36,22 +36,25 @@ namespace Ogmas.Repositories
 
         public async Task<T> Delete(string id)
         {
-            var item = await Get(id);
+            var item = Get(id);
 
+            if(item is null)
+                throw new ArgumentException("item does not exist");
+                
             item.IsDeleted = true;
             Context.Set<T>().Update(item);
             await Context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<T> Get(string id)
+        public T Get(string id)
         {
-            return await Query().Where(i => i.Id == id).FirstOrDefaultAsync();
+            return Query().Where(i => i.Id == id).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            return await Query().ToListAsync();
+            return Query().ToList();
         }
 
         public IEnumerable<T> Filter(Func<T, bool> predicate)

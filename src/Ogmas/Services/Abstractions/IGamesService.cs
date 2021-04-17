@@ -9,7 +9,7 @@ namespace Ogmas.Services.Abstractions
     {
         Task<OrganizedGameResponse> CreateGame(string userId, HostGameOptions options);
         Task<OrganizedGameResponse> DeleteGame(string id);
-        Task<OrganizedGameResponse> GetGame(string id);
+        OrganizedGameResponse GetGame(string id);
         IEnumerable<OrganizedGameResponse> GetGames(string hostId);
     }
 }

@@ -20,9 +20,9 @@ namespace Ogmas.Services
             gameTasksRepository = _gameTasksRepository;
         }
 
-        public async Task<GameTaskResponse> GetQuestion(string id)
+        public GameTaskResponse GetQuestion(string id)
         {
-            var task = await gameTasksRepository.Get(id);
+            var task = gameTasksRepository.Get(id);
             if(task is null)
                 throw new ArgumentException("Question does not exist");
             return mapper.Map<GameTaskResponse>(task);

@@ -6,7 +6,7 @@ namespace Ogmas.Services.Abstractions
 {
     public interface IAnswersService
     {
-        Task<TaskAnswerResponse> GetAnswer(string answerId);
+        TaskAnswerResponse GetAnswer(string answerId);
         IEnumerable<TaskAnswerResponse> GetQuestionAnswers(string questionId);
     }
 }

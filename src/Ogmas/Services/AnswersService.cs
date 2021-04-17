@@ -20,9 +20,9 @@ namespace Ogmas.Services
             taskAnswersRepository = _taskAnswersRepository;
         }
         
-        public async Task<TaskAnswerResponse> GetAnswer(string id)
+        public TaskAnswerResponse GetAnswer(string id)
         {
-            var answer = await taskAnswersRepository.Get(id);
+            var answer = taskAnswersRepository.Get(id);
             if(answer is null)
                 throw new ArgumentException("answer does not exist");
             return mapper.Map<TaskAnswerResponse>(answer);

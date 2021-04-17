@@ -18,9 +18,9 @@ namespace Ogmas.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetQuestion(string id)
+        public IActionResult GetQuestion(string id)
         {
-            var task = await gameTasksService.GetQuestion(id);
+            var task = gameTasksService.GetQuestion(id);
             return Ok(task);
         }
     }

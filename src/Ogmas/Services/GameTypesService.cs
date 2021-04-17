@@ -35,15 +35,15 @@ namespace Ogmas.Services
             return mapper.Map<GameResponse>(game);
         }
 
-        public async Task<IEnumerable<GameResponse>> GetGames()
+        public IEnumerable<GameResponse> GetGames()
         {
-            var games = await gamesRepository.GetAll();
+            var games = gamesRepository.GetAll();
             return games.Select(g => mapper.Map<GameResponse>(g));
         }
 
-        public async Task<GameResponse> GetGame(string id)
+        public GameResponse GetGame(string id)
         {
-            var game = await gamesRepository.Get(id);
+            var game = gamesRepository.Get(id);
             if(game is null)
                 throw new ArgumentException("game does not exist");
             return mapper.Map<GameResponse>(game);

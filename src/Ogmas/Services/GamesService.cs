@@ -26,7 +26,7 @@ namespace Ogmas.Services
 
         public async Task<OrganizedGameResponse> CreateGame(string userId, HostGameOptions options)
         {
-            var gameType = await gamesRepository.Get(options.GameTypeId);
+            var gameType = gamesRepository.Get(options.GameTypeId);
             if(gameType is null)
                 throw new ArgumentException("game type does not exist");
 
@@ -38,7 +38,7 @@ namespace Ogmas.Services
         
         public async Task<OrganizedGameResponse> DeleteGame(string id)
         {
-            var game = await organizedGamesRepository.Get(id);
+            var game = organizedGamesRepository.Get(id);
             if(game is null)
                 throw new ArgumentException("hosted game does not exist");
 
@@ -51,9 +51,9 @@ namespace Ogmas.Services
             return mapper.Map<OrganizedGameResponse>(deleted);
         }
 
-        public async Task<OrganizedGameResponse> GetGame(string id)
+        public OrganizedGameResponse GetGame(string id)
         {
-            var game = await organizedGamesRepository.Get(id);
+            var game = organizedGamesRepository.Get(id);
             if(game is null)
                 throw new ArgumentException("hosted game does not exist");
             return mapper.Map<OrganizedGameResponse>(game);

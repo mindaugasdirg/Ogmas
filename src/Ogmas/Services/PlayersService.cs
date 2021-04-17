@@ -47,7 +47,7 @@ namespace Ogmas.Services
 
         public async Task<PlayerResponse> JoinGame(string gameId, string userId)
         {
-            var game = await organizedGamesRepository.Get(gameId);
+            var game = organizedGamesRepository.Get(gameId);
             if(game is null)
                 throw new ArgumentException("game does not exist");
             if(game.StartTime.CompareTo(DateTime.UtcNow) <= 0)
@@ -72,7 +72,7 @@ namespace Ogmas.Services
 
         public async Task<PlayerResponse> LeaveGame(string playerId)
         {
-            var found = await gameParticipantsRepository.Get(playerId);
+            var found = gameParticipantsRepository.Get(playerId);
             if(found is null)
                 throw new ArgumentException("player does not exist");
             
@@ -90,8 +90,8 @@ namespace Ogmas.Services
             if(answered.Count() != 0)
                 throw new InvalidOperationException("Question is already answered");
 
-            var organizedGame = await organizedGamesRepository.Get(gameId);
-            var game = await gamesRepository.Get(organizedGame.GameTypeId);
+            var organizedGame = organizedGamesRepository.Get(gameId);
+            var game = gamesRepository.Get(organizedGame.GameTypeId);
             if(game is null)
                 throw new Exception("Game does not exist");
 

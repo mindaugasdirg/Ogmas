@@ -43,9 +43,9 @@ namespace Ogmas.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGame(string id)
+        public IActionResult GetGame(string id)
         {
-            var game = await gamesService.GetGame(id);
+            var game = gamesService.GetGame(id);
             return Ok(game);
         }
     }
