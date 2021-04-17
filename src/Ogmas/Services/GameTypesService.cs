@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,6 +44,8 @@ namespace Ogmas.Services
         public async Task<GameResponse> GetGame(string id)
         {
             var game = await gamesRepository.Get(id);
+            if(game is null)
+                throw new ArgumentException("game does not exist");
             return mapper.Map<GameResponse>(game);
         }
 

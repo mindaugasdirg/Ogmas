@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Services.Abstractions;
+using Ogmas.Utilities;
 
 namespace Ogmas.Controllers
 {
@@ -23,7 +24,7 @@ namespace Ogmas.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGame([FromBody] HostGameOptions gameOptions)
         {
-            var user = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var user = HttpContext.User.GetSubClaim();
             var created = await gamesService.CreateGame(user, gameOptions);
             return Created($"/api/games/{created.Id}", created);
         }

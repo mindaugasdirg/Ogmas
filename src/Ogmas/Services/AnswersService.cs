@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace Ogmas.Services
         public async Task<TaskAnswerResponse> GetAnswer(string id)
         {
             var answer = await taskAnswersRepository.Get(id);
+            if(answer is null)
+                throw new ArgumentException("answer does not exist");
             return mapper.Map<TaskAnswerResponse>(answer);
         }
 

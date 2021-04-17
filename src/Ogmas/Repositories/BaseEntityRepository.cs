@@ -8,7 +8,7 @@ using Ogmas.Models.Entities;
 
 namespace Ogmas.Repositories
 {
-    public class BaseEntityRepository<T> where T : BaseEntity
+    public abstract class BaseEntityRepository<T> where T : BaseEntity
     {
         protected readonly DatabaseContext Context;
 
@@ -16,6 +16,8 @@ namespace Ogmas.Repositories
         {
             Context = context;
         }
+
+        protected abstract IQueryable<T> Query();
 
         public async Task<T> Add(T item)
         {
@@ -44,21 +46,17 @@ namespace Ogmas.Repositories
 
         public async Task<T> Get(string id)
         {
-            var item = await Context.Set<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
-            if(item is null)
-                throw new ArgumentException($"Item with id '{id}' does not exist");
-
-            return item;
+            return await Query().Where(i => i.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<T>> GetAll()
         {
-            return await Context.Set<T>().ToListAsync();
+            return await Query().ToListAsync();
         }
 
         public IEnumerable<T> Filter(Func<T, bool> predicate)
         {
-            return Context.Set<T>().Where(predicate).ToList();
+            return Query().Where(predicate).ToList();
         }
     }
 }
