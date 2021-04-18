@@ -1,7 +1,9 @@
+import { taskEither } from "fp-ts";
 import { memoize } from "lodash/fp";
 import { User, UserManager, UserManagerSettings, WebStorageStateStore } from "oidc-client";
 import { ApplicationPaths } from "../constants/ApiAuthorizationConstants";
-import { AuthenticationErrorResult, AuthenticationRedirectResult, AuthenticationResult, AuthenticationResultStatus, AuthenticationSuccessResult } from "../types";
+import { AuthenticationErrorResult, AuthenticationRedirectResult, AuthenticationResult, AuthenticationResultStatus, AuthenticationSuccessResult } from "../types/types";
+import { errIdentity } from "../utils";
 import { fetchJson } from "./request";
 
 const defaultSettings: UserManagerSettings = {
@@ -36,6 +38,16 @@ export const getAccessToken = async () => {
     const user = await userManager.getUser();
     return user && user.access_token;
 }
+
+export const getAccessTokenFp = () => taskEither.tryCatch(
+    async () => {
+        const user = await getUserManager().then(userManager => userManager.getUser());
+        if(!user)
+            throw new Error("User is not logged in");
+        return user.access_token;
+    },
+    errIdentity
+);
 
 export const signIn = async (state: { returnUrl: string }): Promise<AuthenticationResult> => {
     const userManager = await getUserManager();

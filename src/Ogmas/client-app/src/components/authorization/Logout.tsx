@@ -1,7 +1,7 @@
 import React from 'react'
 import { completeSignOut, isAuthenticated, signOut } from '../../clients/AuthorizationClient';
 import { ApplicationPaths, LogoutActions, QueryParameterNames } from '../../constants/ApiAuthorizationConstants';
-import { AuthenticationResultStatus } from '../../types';
+import { AuthenticationResultStatus } from '../../types/types';
 
 const getReturnUrl = (state?: { returnUrl?: string }) => {
     const params = new URLSearchParams(window.location.search);
