@@ -15,7 +15,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { GameType } from "../types/types";
 import { array, task, taskEither } from "fp-ts";
-import { flow, pipe } from "fp-ts/lib/function";
+import { pipe } from "fp-ts/lib/function";
 import { createGame, getGameTypes } from "../clients/ApiClient";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,15 +41,17 @@ export const CreateGame = () => {
   const [timeInterval, setTimeInterval] = React.useState<MaterialUiPickersDate>(new Date("2021-01-01T00:05:00.000"));
   const classes = useStyles();
 
-  const updateGameTypes = flow(
-    getGameTypes,
-    taskEither.fold(
-      left => task.fromIO(() => console.log("Error getting games: ", left)),
-      right => task.fromIO(() => setGameTypes(right))
-    )
-  );
+  React.useEffect(() => {
+    const updateGameTypes = pipe(
+      getGameTypes(),
+      taskEither.fold(
+        left => task.fromIO(() => console.log("Error getting games: ", left)),
+        right => task.fromIO(() => setGameTypes(right))
+      )
+    );
 
-  React.useEffect(() => { updateGameTypes()(); }, []);
+    updateGameTypes();
+  }, []);
 
   const create = async () => {
     if(!gameType || !startDate || !timeInterval) return;

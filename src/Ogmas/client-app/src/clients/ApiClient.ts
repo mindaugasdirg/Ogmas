@@ -1,5 +1,5 @@
-import { array, either, taskEither } from "fp-ts";
-import { flow, pipe } from "fp-ts/lib/function";
+import { taskEither } from "fp-ts";
+import { pipe } from "fp-ts/lib/function";
 import { parseGame } from "../types/typeConverters";
 import { GameDto, GameType } from "../types/types";
 import { getAccessTokenFp } from "./AuthorizationClient";
