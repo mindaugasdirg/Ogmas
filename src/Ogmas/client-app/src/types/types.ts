@@ -40,3 +40,19 @@ export interface Game {
   gameTypeId: string;
   organizerId: string;
 }
+
+export interface PlayerDto {
+  id: string;
+  startTime: string;
+  finishTime?: string | null;
+  gameId: string;
+  playerId: string;
+}
+
+export interface Player {
+  id: string;
+  startTime: Date;
+  finishTime?: Date;
+  gameId: string;
+  playerId: string;
+}
