@@ -3,7 +3,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 interface Props<T> {
   render: (t: T) => JSX.Element;
   resource: T | undefined;
-  condition?: (t: T | undefined) => boolean;
+  condition?: (t: T | undefined) => boolean | T;
 }
 
 export const Loader = <T extends any>(props: Props<T>) => {

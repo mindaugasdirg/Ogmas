@@ -17,6 +17,7 @@ import { GameType } from "../types/types";
 import { array, task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import { createGame, getGameTypes } from "../clients/ApiClient";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,6 +40,7 @@ export const CreateGame = () => {
   const [gameType, setGameType] = React.useState<string>("");
   const [startDate, setSelectedDate] = React.useState<MaterialUiPickersDate>(new Date());
   const [timeInterval, setTimeInterval] = React.useState<MaterialUiPickersDate>(new Date("2021-01-01T00:05:00.000"));
+  const history = useHistory();
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -63,6 +65,7 @@ export const CreateGame = () => {
         right => task.fromIO(() => {
           console.log("Game created: ", right.id);
           console.log("Game: ", right);
+          history.push(`/game-host/${right.id}`);
         })
       )
     );

@@ -70,7 +70,9 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
     </Fragment>
   );
 
-  const renderPlayers = (players: Player[]) => (
+  const renderPlayers = (players: Player[]) => players.length === 0 ? renderEmptyList() : renderPlayersTable(players);
+  
+  const renderPlayersTable = (players: Player[]) => (
     <TableContainer>
       <Table>
         <TableHead>
@@ -93,6 +95,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
         </TableBody>
       </Table>
     </TableContainer>
+  
   );
   const renderEmptyList = () => (
     <Fragment>
@@ -111,8 +114,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h5" component="h2" className={classes.title}>Players</Typography>
-          <Loader resource={players} condition={x => !!x && x.length > 0} render={renderPlayers} />
-          {players && players.length === 0 && renderEmptyList()}
+          <Loader resource={players} condition={x => !!x} render={renderPlayers} />
         </CardContent>
       </Card>
     </Fragment>
