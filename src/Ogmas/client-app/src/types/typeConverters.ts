@@ -5,7 +5,7 @@ import { Game, GameDto, Player, PlayerDto } from "./types";
 const validateDateString = (date: string): either.Either<Error, Date> => {
   const timestamp = Date.parse(date);
   if(!timestamp || isNaN(timestamp)) {
-    either.left(new Error("start time is invalid date"));
+    return either.left(new Error("start time is invalid date"));
   }
 
   return either.right(new Date(timestamp));
