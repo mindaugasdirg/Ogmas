@@ -11,7 +11,6 @@ import VectorSource from "ol/source/Vector";
 import { useGeographic as useGeoCoords } from 'ol/proj';
 import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
-import { Control, defaults as defaultControls } from 'ol/control';
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();
