@@ -9,12 +9,14 @@ import { ApiAuthorizationRoutes } from './components/authorization/ApiAuthorizat
 import { ApplicationPaths } from './constants/ApiAuthorizationConstants';
 import { CreateGame } from './components/CreateGame';
 import { GameHost } from './components/GameHost';
+import { Map } from './components/Map';
 
 const App = () => (
   <Layout>
     <Route exact path='/' component={Home} />
     <Route path='/create-game' component={CreateGame} />
     <Route path='/game-host/:game' component={GameHost} />
+    <Route path='/player' component={Map} />
     <Route path='/counter' component={Counter} />
     <Route path='/fetch-data' component={FetchData} />
     <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
