@@ -10,11 +10,13 @@ import { ApplicationPaths } from './constants/ApiAuthorizationConstants';
 import { CreateGame } from './components/CreateGame';
 import { GameHost } from './components/GameHost';
 import { Map } from './components/Map';
+import { JoinGame } from './components/JoinGame';
 
 const App = () => (
   <Layout>
     <Route exact path='/' component={Home} />
     <Route path='/create-game' component={CreateGame} />
+    <Route path='/join-game/:game' component={JoinGame} />
     <Route path='/game-host/:game' component={GameHost} />
     <Route path='/player' component={Map} />
     <Route path='/counter' component={Counter} />
