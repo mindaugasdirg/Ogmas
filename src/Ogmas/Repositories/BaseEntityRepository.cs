@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Ogmas.Exceptions;
 using Ogmas.Models.Entities;
 
 namespace Ogmas.Repositories
@@ -39,7 +39,7 @@ namespace Ogmas.Repositories
             var item = Get(id);
 
             if(item is null)
-                throw new ArgumentException("item does not exist");
+                throw new NotFoundException("item does not exist");
                 
             item.IsDeleted = true;
             Context.Set<T>().Update(item);

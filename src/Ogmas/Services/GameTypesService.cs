@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
@@ -45,7 +46,7 @@ namespace Ogmas.Services
         {
             var game = gamesRepository.Get(id);
             if(game is null)
-                throw new ArgumentException("game does not exist");
+                throw new NotFoundException("game does not exist");
             return mapper.Map<GameResponse>(game);
         }
 

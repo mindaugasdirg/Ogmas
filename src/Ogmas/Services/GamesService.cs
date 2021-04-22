@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
@@ -28,7 +29,7 @@ namespace Ogmas.Services
         {
             var gameType = gamesRepository.Get(options.GameTypeId);
             if(gameType is null)
-                throw new ArgumentException("game type does not exist");
+                throw new NotFoundException("game type does not exist");
 
             var organizedGame = mapper.Map<OrganizedGame>(options);
             organizedGame.OrganizerId = userId;
@@ -40,11 +41,11 @@ namespace Ogmas.Services
         {
             var game = organizedGamesRepository.Get(id);
             if(game is null)
-                throw new ArgumentException("hosted game does not exist");
+                throw new NotFoundException("hosted game does not exist");
 
             if(game.StartTime.CompareTo(DateTime.UtcNow) <= 0)
             {
-                throw new InvalidOperationException("Game has already started");
+                throw new InvalidActionException("Game has already started");
             }
 
             var deleted = await organizedGamesRepository.Delete(id);
@@ -55,7 +56,7 @@ namespace Ogmas.Services
         {
             var game = organizedGamesRepository.Get(id);
             if(game is null)
-                throw new ArgumentException("hosted game does not exist");
+                throw new NotFoundException("hosted game does not exist");
             return mapper.Map<OrganizedGameResponse>(game);
         }
 
