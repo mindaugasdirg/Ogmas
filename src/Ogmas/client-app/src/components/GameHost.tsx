@@ -17,6 +17,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import { QrTile } from "./QrTile";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 
 interface RouteParams {
   game: string;
@@ -24,12 +31,21 @@ interface RouteParams {
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     minWidth: 275
   },
   title: {
+    marginBottom: 12
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  paperTitle: {
+    marginTop: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     marginBottom: 12
   }
 }));
@@ -117,6 +133,76 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
           <Loader resource={players} condition={x => !!x} render={renderPlayers} />
         </CardContent>
       </Card>
+      <Paper className={classes.card}>
+        <Typography variant="h5" component="h2" className={classes.paperTitle}>Answers</Typography>
+        <Typography variant="body2" className={classes.paperTitle}>Print each QR code and place them at the correct locations</Typography>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>Quetion 1</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <QrTile title={"aaaa aaaaaaa aaaaaaaaa aaaaaaaaaa aaaaaaaa"} value={"aaa"} correct={true} />
+              </Grid>
+              <Grid item xs={3}>
+                <QrTile title={"bbb"} value={"bbb"} />
+              </Grid>
+              <Grid item xs={3}>
+                <QrTile title={"ccc"} value={"ccc"} />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>Quetion 2</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <QrTile title={"aaa"} value={"aaa"} />
+              </Grid>
+              <Grid item xs={3}>
+                <QrTile title={"bbb"} value={"bbb"} />
+              </Grid>
+              <Grid item xs={3}>
+                <QrTile title={"ccc"} value={"ccc"} />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>Quetion 3</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <QrTile title={"aaa"} value={"aaa"} />
+              </Grid>
+              <Grid item xs={3}>
+                <QrTile title={"bbb"} value={"bbb"} />
+              </Grid>
+              <Grid item xs={3}>
+                <QrTile title={"ccc"} value={"ccc"} />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+      </Paper>
     </Fragment>
   );
 };
