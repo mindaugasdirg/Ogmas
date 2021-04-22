@@ -1,12 +1,17 @@
 import 'ol/ol.css';
-import React from "react";
+import React, { Fragment } from "react";
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { useFeature, useGeolocation, useMap, useSelect, useVectorLayer } from "../hooks";
 import Circle from 'ol/geom/Circle';
 import { Feature } from 'ol';
+import Fab from '@material-ui/core/Fab';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
+import QrReader from 'react-qr-reader';
 
 export const Map = () => {
+  const [showQRReader, setShowQRReader] = React.useState(false);
   const map = useMap("map");
   const accuracyFeature = useFeature();
   const positionFeature = useFeature(new Style({
@@ -71,9 +76,28 @@ export const Map = () => {
     position && map.getView().setCenter(position);
   };
 
+  const openQrReader = () => {
+    map.setTarget(undefined);
+    setShowQRReader(true);
+  }
+  const onScan = (data: string | null) => {
+    if(data){
+      console.log("Scanned QR: ", data);
+      setShowQRReader(false);
+      map.setTarget("map");
+    }
+  };
+  const onError = (err: any) => console.log("Error while scanning QR code: ", err);
+
   return (
-    <div id="map" style={{ height: "640px" }}>
-      <button className="ol-control" onClick={centerToLocation}>center</button>
-    </div>
+    <Fragment>
+      {showQRReader ? <QrReader onScan={onScan} onError={onError} /> :
+        <div id="map" style={{ height: "640px" }}>
+          <button className="ol-control" onClick={centerToLocation}>center</button>
+          <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
+          <Fab color="primary" onClick={openQrReader}><CameraAltIcon /></Fab>
+        </div>
+      }
+    </Fragment>
   );
 };
