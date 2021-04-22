@@ -55,3 +55,13 @@ export const getPlayers = (gameId: string) => {
     taskEither.chainEitherK(array.traverse(either)(parsePlayer))
   );
 };
+
+export const joinGame = (gameId: string) => {
+  const makeRequest = (headers: ApiHeaders) => postRequest<PlayerDto>(`/api/games/${gameId}/players`, undefined, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest),
+    taskEither.chainEitherK(parsePlayer)
+  );
+}
