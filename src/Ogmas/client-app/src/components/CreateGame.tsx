@@ -13,7 +13,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { GameType, SeverityTypes } from "../types/types";
+import { GameType } from "../types/types";
 import { array, task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import { createGame, getGameTypes } from "../clients/ApiClient";

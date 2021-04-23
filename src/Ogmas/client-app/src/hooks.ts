@@ -11,7 +11,6 @@ import VectorSource from "ol/source/Vector";
 import { useGeographic as useGeoCoords } from 'ol/proj';
 import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
-import { AlertProps } from "@material-ui/lab/Alert";
 import { safeCall } from "./utils";
 import { SeverityTypes } from "./types/types";
 

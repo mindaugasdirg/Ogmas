@@ -1,6 +1,6 @@
 import Snackbar from "@material-ui/core/Snackbar";
 import React from "react";
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import MuiAlert from '@material-ui/lab/Alert';
 import { SeverityTypes } from "../types/types";
 
 interface Props {
@@ -27,7 +27,7 @@ export const AlertsContainer = (props: Props) => {
       setMessages(prev => [...prev, { message, severity }]);
       setOpen(true);
     });
-  }, [props.setter]);
+  }, [props, props.setter]);
 
   React.useEffect(() => {
     if (messages.length && !alert) {
