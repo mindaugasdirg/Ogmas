@@ -59,7 +59,8 @@ export const CreateGame = () => {
     );
 
     updateGameTypes();
-  }, [addAlert]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const create = async () => {
     if(!gameType || !startDate || !timeInterval) {

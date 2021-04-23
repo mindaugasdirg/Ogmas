@@ -9,6 +9,9 @@ namespace Ogmas.Models.Entities
         [Required]
         public string Question { get; set; }
         public string Hint { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Radius { get; set; }
 
         [ForeignKey("GameId")]
         [Required]

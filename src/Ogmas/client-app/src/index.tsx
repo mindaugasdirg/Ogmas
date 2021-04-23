@@ -4,12 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import teal from '@material-ui/core/colors/teal';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 const baseUrl = document.getElementsByTagName('base')[0]?.getAttribute('href') || "https://localhost:5001";
 
+const theme = createMuiTheme({
+  palette: {
+    primary: teal,
+    secondary: teal
+  }
+})
+
 ReactDOM.render(
   <BrowserRouter basename={baseUrl}>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

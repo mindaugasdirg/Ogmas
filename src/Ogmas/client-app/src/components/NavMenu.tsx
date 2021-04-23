@@ -32,9 +32,6 @@ export const NavMenu = () => {
           Ogmas
         </Typography>
         <Button color="inherit" component={Link} to="/">Home</Button>
-        <Button color="inherit" component={Link} to="/counter">Counter</Button>
-        <Button color="inherit" component={Link} to="fetch-data">Fetch data</Button>
-        <Button color="inherit" component={Link} to="create-game">Create game</Button>
         <LoginMenu/>
       </Toolbar>
     </AppBar>

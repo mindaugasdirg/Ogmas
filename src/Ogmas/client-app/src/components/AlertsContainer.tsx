@@ -27,7 +27,8 @@ export const AlertsContainer = (props: Props) => {
       setMessages(prev => [...prev, { message, severity }]);
       setOpen(true);
     });
-  }, [props, props.setter]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
     if (messages.length && !alert) {

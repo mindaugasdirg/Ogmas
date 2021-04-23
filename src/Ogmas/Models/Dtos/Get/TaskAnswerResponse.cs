@@ -5,5 +5,6 @@ namespace Ogmas.Models.Dtos.Get
         public string Id { get; set; }
         public string Answer { get; set; }
         public string Location { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

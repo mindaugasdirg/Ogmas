@@ -6,14 +6,19 @@ import { useFeature, useGeolocation, useMap, useSelect, useVectorLayer } from ".
 import Circle from 'ol/geom/Circle';
 import { Feature } from 'ol';
 import Fab from '@material-ui/core/Fab';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-import QrReader from 'react-qr-reader';
 import { FabHolder } from './FabHolder';
+import { Question } from '../types/types';
 
-export const Map = () => {
-  const [showQRReader, setShowQRReader] = React.useState(false);
+interface Props {
+  questions: Question[];
+  onQuestionSelected: (question?: Question) => void;
+  removeSelectedCallback: (func: () => void) => void;
+}
+
+export const Map = (props: Props) => {
   const map = useMap("map");
+  const [selectedFeature, setSelectedFeature] = React.useState<Feature>();
   const accuracyFeature = useFeature();
   const positionFeature = useFeature(new Style({
     image: new CircleStyle({
@@ -30,12 +35,28 @@ export const Map = () => {
   const geolocation = useGeolocation();
   const vectorLayerSource = useVectorLayer(map, [accuracyFeature, positionFeature]);
   useSelect(map, e => {
-    console.log("selected count: ", e.selected.length);
+    if (!e.selected.length) {
+      setSelectedFeature(undefined);
+      props.onQuestionSelected(undefined);
+      return;
+    }
+
     e.selected.forEach(feature => {
-      console.log("selected feature which has question: ", feature.get("questionId"));
+      const question: Question | undefined = feature.get("question");
+      console.log("selected question: ", question?.id);
+      setSelectedFeature(feature);
+      props.onQuestionSelected(question);
+      // console.log("selected feature which has question: ", feature.get("questionId"));
     });
   });
-  
+
+  React.useEffect(() => {
+    props.removeSelectedCallback(() => {
+      selectedFeature && vectorLayerSource.removeFeature(selectedFeature);
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFeature]);
+
   React.useEffect(() => {
     geolocation.on("change:accuracyGeometry", () => {
       accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
@@ -55,10 +76,12 @@ export const Map = () => {
   }, [geolocation, accuracyFeature, positionFeature, map]);
 
   React.useEffect(() => {
-    const points = [[23.96, 54.905], [23.95, 54.91]];
-    points.forEach((point, index) => {
-      const feature = new Feature(new Circle(point, 0.003));
-      feature.set("questionId", index);
+    // const points = [[23.96, 54.905], [23.95, 54.91]];
+    props.questions.forEach(question => {
+      console.log("adding question to the map: ", question.id);
+      console.log("location: ", question.x, question.y);
+      const feature = new Feature(new Circle([question.x, question.y], question.radius));
+      feature.set("question", question);
       feature.setStyle(new Style({
         fill: new Fill({
           color: '#fc554940',
@@ -70,36 +93,20 @@ export const Map = () => {
       }));
       vectorLayerSource.addFeature(feature);
     });
-  }, [vectorLayerSource]);
+  }, [vectorLayerSource, props.questions]);
 
   const centerToLocation = () => {
     const position = geolocation.getPosition();
     position && map.getView().setCenter(position);
   };
 
-  const openQrReader = () => {
-    map.setTarget(undefined);
-    setShowQRReader(true);
-  }
-  const onScan = (data: string | null) => {
-    if(data){
-      console.log("Scanned QR: ", data);
-      setShowQRReader(false);
-      map.setTarget("map");
-    }
-  };
-  const onError = (err: any) => console.log("Error while scanning QR code: ", err);
-
   return (
     <Fragment>
-      {showQRReader ? <QrReader onScan={onScan} onError={onError} /> :
-        <div id="map" style={{ height: "640px" }}>
-          <FabHolder>
-            <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
-            <Fab color="primary" onClick={openQrReader}><CameraAltIcon /></Fab>
-          </FabHolder>
-        </div>
-      }
+      <FabHolder side="right">
+        <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
+      </FabHolder>
+      <div id="map" style={{ height: "640px" }}>
+      </div>
     </Fragment>
   );
 };

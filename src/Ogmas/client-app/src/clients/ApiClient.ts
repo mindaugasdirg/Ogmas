@@ -2,9 +2,9 @@ import { array, taskEither } from "fp-ts";
 import { either } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { parseGame, parsePlayer } from "../types/typeConverters";
-import { GameDto, GameType, PlayerDto } from "../types/types";
+import { Answer, GameDto, GameType, PlayerDto, Question } from "../types/types";
 import { getAccessTokenFp } from "./AuthorizationClient";
-import { getRequest, postRequest } from "./request";
+import { getRequest, getTextRequest, patchRequestWithoutResult, postRequest, postRequestWithoutResult } from "./request";
 
 const mapTokenToHeader = (token: string) => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" });
 type ApiHeaders = ReturnType<typeof mapTokenToHeader>
@@ -46,6 +46,51 @@ export const getGameTypes = () => {
   );
 }
 
+export const getGameType = (gameTypeId: string) => {
+  const makeRequest = (headers: ApiHeaders) => getRequest<GameType>(`/api/gametypes/${gameTypeId}`, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest)
+  );
+}
+
+export const getQuestions = (gameTypeId: string) => {
+  const makeRequest = (headers: ApiHeaders) => getRequest<Question[]>(`api/gametypes/${gameTypeId}/questions`, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest)
+  );
+}
+
+export const getAnswers = (questionId: string) => {
+  const makeRequest = (headers: ApiHeaders) => getRequest<Answer[]>(`api/questions/${questionId}/answers`, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest)
+  );
+}
+
+export const submitAnswer = (gameId: string, questionId: string, answerId: string) => {
+  const makeRequest = (headers: ApiHeaders) => postRequestWithoutResult(`api/games/${gameId}/questions/${questionId}/answers/${answerId}`, undefined, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest)
+  );
+}
+
+export const finishGame = (playerId: string, time: Date) => {
+  const makeRequest = (headers: ApiHeaders) => patchRequestWithoutResult(`api/players/${playerId}/finish/${time.toISOString()}`, undefined, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest)
+  );
+}
+
 export const getPlayers = (gameId: string) => {
   const makeRequest = (headers: ApiHeaders) => getRequest<PlayerDto[]>(`/api/games/${gameId}/players`, headers);
 
@@ -55,6 +100,25 @@ export const getPlayers = (gameId: string) => {
     taskEither.chainEitherK(array.traverse(either)(parsePlayer))
   );
 };
+
+export const getPlayer = (playerId: string) => {
+  const makeRequest = (headers: ApiHeaders) => getRequest<PlayerDto>(`/api/players/${playerId}`, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest),
+    taskEither.chainEitherK(parsePlayer)
+  );
+};
+
+export const getUsername = (playerId: string) => {
+  const makeRequest = (headers: ApiHeaders) => getTextRequest(`/api/players/${playerId}/username`, headers);
+
+  return pipe(
+    getRequestHeaders(),
+    taskEither.chain(makeRequest),
+  );
+}
 
 export const joinGame = (gameId: string) => {
   const makeRequest = (headers: ApiHeaders) => postRequest<PlayerDto>(`/api/games/${gameId}/players`, undefined, headers);
