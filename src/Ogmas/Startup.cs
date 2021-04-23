@@ -38,6 +38,7 @@ namespace Ogmas
             services.AddTransient<OrganizedGamesRepository>();
             services.AddTransient<SubmitedAnswersRepository>();
             services.AddTransient<TaskAnswersRepository>();
+            services.AddTransient<UserRepository>();
 
             // services
             services.AddAutoMapper(typeof(Startup));

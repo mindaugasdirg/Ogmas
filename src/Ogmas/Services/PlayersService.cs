@@ -19,9 +19,11 @@ namespace Ogmas.Services
         private readonly SubmitedAnswersRepository submitedAnswersRepository;
         private readonly GamesRepository gamesRepository;
         private readonly TaskAnswersRepository taskAnswersRepository;
+        private readonly UserRepository userRepository;
 
         public PlayersService(IMapper _mapper, GameParticipantsRepository _gameParticipantsRepository, OrganizedGamesRepository _organizedGamesRepository,
-                              SubmitedAnswersRepository _submitedAnswersRepository, GamesRepository _gamesRepository, TaskAnswersRepository _taskAnswersRepository)
+                              SubmitedAnswersRepository _submitedAnswersRepository, GamesRepository _gamesRepository, TaskAnswersRepository _taskAnswersRepository,
+                              UserRepository _userRepository)
         {
             mapper = _mapper;
             gameParticipantsRepository = _gameParticipantsRepository;
@@ -29,6 +31,7 @@ namespace Ogmas.Services
             submitedAnswersRepository = _submitedAnswersRepository;
             gamesRepository = _gamesRepository;
             taskAnswersRepository = _taskAnswersRepository;
+            userRepository = _userRepository;
         }
 
         public IEnumerable<SubmitedAnswerResponse> GetPlayerAnswers(string gameId, string userId)
@@ -44,6 +47,26 @@ namespace Ogmas.Services
         {
             var participants = gameParticipantsRepository.GetParticipantsByGame(gameId);
             return participants.Select(x => mapper.Map<PlayerResponse>(x));
+        }
+        
+        public PlayerResponse GetPlayer(string playerId)
+        {
+            var player = gameParticipantsRepository.Get(playerId);
+            if(player is null)
+                throw new NotFoundException("User does not participate in the game");
+
+            return mapper.Map<PlayerResponse>(player);
+        }
+        
+        public string GetUsername(string playerId)
+        {
+            var player = gameParticipantsRepository.Get(playerId);
+            if(player is null)
+                throw new NotFoundException("User does not participate in the game");
+
+            var username = userRepository.GetUsername(player.PlayerId);
+
+            return username;
         }
 
         public async Task<PlayerResponse> JoinGame(string gameId, string userId)
