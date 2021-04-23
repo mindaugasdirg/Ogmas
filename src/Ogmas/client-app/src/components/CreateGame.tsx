@@ -59,6 +59,7 @@ export const CreateGame = () => {
     );
 
     updateGameTypes();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const create = async () => {

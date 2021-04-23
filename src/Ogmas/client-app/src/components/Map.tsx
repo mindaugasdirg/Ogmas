@@ -54,6 +54,7 @@ export const Map = (props: Props) => {
     props.removeSelectedCallback(() => {
       selectedFeature && vectorLayerSource.removeFeature(selectedFeature);
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFeature]);
 
   React.useEffect(() => {

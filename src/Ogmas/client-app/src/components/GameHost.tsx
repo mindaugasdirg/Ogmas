@@ -1,30 +1,11 @@
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import { array, task, taskEither } from "fp-ts";
 import { flow, pipe } from "fp-ts/lib/function";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
 import { Game, GameData, Player, Question } from "../types/types";
-import format from "date-fns/format";
 import { makeStyles } from '@material-ui/core/styles';
 import { Fragment } from "react";
-import { Loader } from "./Loader";
-import TableContainer from "@material-ui/core/TableContainer";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
-import Accordion from "@material-ui/core/Accordion";
-import Divider from '@material-ui/core/Divider';
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import { QrTile } from "./QrTile";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
 import { useErrorHelper } from "../hooks";
 import { AlertsContainer } from "./AlertsContainer";
 import { GameSetup } from "./GameSetup";
@@ -88,6 +69,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
 
     getHostedGame();
     getGamePlayers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.match.params.game]);
 
   React.useEffect(() => {
@@ -104,6 +86,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
       const namingPlayer = retreiveUsername(player);
       await namingPlayer();
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [players]);
 
   React.useEffect(() => {
@@ -117,6 +100,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGameData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostedGame]);
 
   React.useEffect(() => {
@@ -135,6 +119,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGameQuestions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData]);
 
   return (

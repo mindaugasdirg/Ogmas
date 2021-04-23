@@ -4,7 +4,6 @@ import { pipe } from "fp-ts/lib/function";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import { joinGame } from "../clients/ApiClient";
-import { Player } from "../types/types";
 
 interface RouteParams {
   game: string;

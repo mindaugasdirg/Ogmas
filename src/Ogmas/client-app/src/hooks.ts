@@ -31,7 +31,7 @@ export const useMap = (target: string, zoom: number = 14, center: [number, numbe
     })
   }));
 
-  React.useEffect(() => map.setTarget(target), [map]);
+  React.useEffect(() => map.setTarget(target), [map, target]);
 
   return map;
 };

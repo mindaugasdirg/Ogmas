@@ -2,9 +2,9 @@ import { array, taskEither } from "fp-ts";
 import { either } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { parseGame, parsePlayer } from "../types/typeConverters";
-import { Answer, GameDto, GameType, PlayerDto, Question, TypedError } from "../types/types";
+import { Answer, GameDto, GameType, PlayerDto, Question } from "../types/types";
 import { getAccessTokenFp } from "./AuthorizationClient";
-import { getRequest, getTextRequest, patchRequest, postRequest } from "./request";
+import { getRequest, getTextRequest, patchRequestWithoutResult, postRequest, postRequestWithoutResult } from "./request";
 
 const mapTokenToHeader = (token: string) => ({ Authorization: `Bearer ${token}`, "Content-Type": "application/json" });
 type ApiHeaders = ReturnType<typeof mapTokenToHeader>
@@ -74,7 +74,7 @@ export const getAnswers = (questionId: string) => {
 }
 
 export const submitAnswer = (gameId: string, questionId: string, answerId: string) => {
-  const makeRequest = (headers: ApiHeaders) => postRequest<void>(`api/games/${gameId}/questions/${questionId}/answers/${answerId}`, undefined, headers);
+  const makeRequest = (headers: ApiHeaders) => postRequestWithoutResult(`api/games/${gameId}/questions/${questionId}/answers/${answerId}`, undefined, headers);
 
   return pipe(
     getRequestHeaders(),
@@ -83,7 +83,7 @@ export const submitAnswer = (gameId: string, questionId: string, answerId: strin
 }
 
 export const finishGame = (playerId: string, time: Date) => {
-  const makeRequest = (headers: ApiHeaders) => patchRequest<void>(`api/players/${playerId}/finish/${time.toISOString()}`, undefined, headers);
+  const makeRequest = (headers: ApiHeaders) => patchRequestWithoutResult(`api/players/${playerId}/finish/${time.toISOString()}`, undefined, headers);
 
   return pipe(
     getRequestHeaders(),

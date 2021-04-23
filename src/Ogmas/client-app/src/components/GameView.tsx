@@ -22,12 +22,6 @@ interface RouteParams {
   player: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  fab: {
-    zIndex: 1
-  }
-}));
-
 export const GameView = (props: RouteComponentProps<RouteParams>) => {
   const [game, setGame] = React.useState<Game>();
   const [gameData, setGameData] = React.useState<GameData>();
@@ -37,7 +31,6 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   const [showMap, setShowMap] = React.useState(true);
   const [removeSelected, setRemoveSelected] = React.useState<() => void>();
   const [addAlert, setAddAlert] = useErrorHelper();
-  const classes = useStyles();
 
   React.useEffect(() => {
     const getGamePlayer = pipe(
@@ -48,6 +41,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGamePlayer();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.match.params.player]);
 
   React.useEffect(() => {
@@ -61,6 +55,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getCurrentGame();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player]);
 
   React.useEffect(() => {
@@ -74,6 +69,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGameData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
   React.useEffect(() => {
@@ -87,6 +83,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGameQuestions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData]);
 
   React.useEffect(() => {
@@ -105,6 +102,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       console.log("finishing game");
       sendGameFinish();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, questions]);
 
   const handleAnswer = async (answer: string) => {
