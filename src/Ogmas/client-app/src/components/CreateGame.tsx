@@ -19,7 +19,6 @@ import { pipe } from "fp-ts/lib/function";
 import { createGame, getGameTypes } from "../clients/ApiClient";
 import { useHistory } from "react-router";
 import { AlertsContainer } from "./AlertsContainer";
-import { safeCall } from "../utils";
 import { useErrorHelper } from "../hooks";
 
 const useStyles = makeStyles((theme) => ({

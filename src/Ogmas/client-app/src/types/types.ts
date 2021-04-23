@@ -60,3 +60,14 @@ export interface Player {
 }
 
 export type SeverityTypes = Required<AlertProps["severity"]>;
+
+export interface ErrorDto {
+  message: string;
+  errorType: string;
+}
+
+export class TypedError extends Error {
+  constructor(public type: string, message: string) {
+    super(message);
+  }
+}

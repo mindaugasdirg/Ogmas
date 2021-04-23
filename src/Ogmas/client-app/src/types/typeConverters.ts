@@ -1,17 +1,17 @@
 import { either } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
-import { Game, GameDto, Player, PlayerDto } from "./types";
+import { Game, GameDto, Player, PlayerDto, TypedError } from "./types";
 
-const validateDateString = (date: string): either.Either<Error, Date> => {
+const validateDateString = (date: string): either.Either<TypedError, Date> => {
   const timestamp = Date.parse(date);
   if(!timestamp || isNaN(timestamp)) {
-    return either.left(new Error("start time is invalid date"));
+    return either.left(new TypedError("ParseError", "start time is invalid date"));
   }
 
   return either.right(new Date(timestamp));
 };
 
-export const parseGame = (response: GameDto): either.Either<Error, Game> => {
+export const parseGame = (response: GameDto): either.Either<TypedError, Game> => {
   const startInterval = new Date(2020, 1, 1, 0, 0, response.startInterval);
 
   return pipe(
@@ -26,7 +26,7 @@ export const parseGame = (response: GameDto): either.Either<Error, Game> => {
   );
 };
 
-export const parsePlayer = (response: PlayerDto): either.Either<Error, Player> => {
+export const parsePlayer = (response: PlayerDto): either.Either<TypedError, Player> => {
   const finishTime = response.finishTime ? new Date(response.finishTime) : undefined;
 
   return pipe(
