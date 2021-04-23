@@ -1,3 +1,5 @@
+import { AlertProps } from "@material-ui/lab/Alert";
+
 export enum AuthenticationResultStatus {
   Redirect = 'redirect',
   Success = 'success',
@@ -55,4 +57,17 @@ export interface Player {
   finishTime?: Date;
   gameId: string;
   playerId: string;
+}
+
+export type SeverityTypes = Required<AlertProps["severity"]>;
+
+export interface ErrorDto {
+  message: string;
+  errorType: string;
+}
+
+export class TypedError extends Error {
+  constructor(public type: string, message: string) {
+    super(message);
+  }
 }

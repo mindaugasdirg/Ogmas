@@ -11,6 +11,8 @@ import VectorSource from "ol/source/Vector";
 import { useGeographic as useGeoCoords } from 'ol/proj';
 import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
+import { safeCall } from "./utils";
+import { SeverityTypes } from "./types/types";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();
@@ -68,4 +70,10 @@ export const useSelect = (map: Map, func: (e: SelectEvent) => void) => {
     select.on("select", func);
     map.addInteraction(select);
   }, [select, func, map]);
+};
+
+export const useErrorHelper =
+  (): [(message: string, severity: SeverityTypes) => void, React.Dispatch<React.SetStateAction<((message: string, severity: SeverityTypes) => void) | undefined>>] => {
+  const [addAlert, setAddAlert] = React.useState<(message: string, severity: SeverityTypes) => void>();
+  return [safeCall(addAlert), setAddAlert];
 };

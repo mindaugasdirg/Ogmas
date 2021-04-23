@@ -26,7 +26,7 @@ export const LoginMenu = () => {
   const authenticatedView = (userName: string, profilePath: string, logoutPath: LogoutPath) => {
     return (<Fragment>
       <Button color="inherit" component={Link} to={profilePath}>Hello {userName}</Button>
-      <Button color="inherit"component={Link} to={logoutPath}>Logout</Button>
+      <Button color="inherit" component={Link} to={logoutPath}>Logout</Button>
     </Fragment>);
 
   }

@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
+using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Repositories;
 using Ogmas.Services.Abstractions;
@@ -24,7 +23,7 @@ namespace Ogmas.Services
         {
             var answer = taskAnswersRepository.Get(id);
             if(answer is null)
-                throw new ArgumentException("answer does not exist");
+                throw new NotFoundException("answer does not exist");
             return mapper.Map<TaskAnswerResponse>(answer);
         }
 

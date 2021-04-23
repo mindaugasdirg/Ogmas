@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
 using Ogmas.Repositories;
@@ -34,7 +35,7 @@ namespace Ogmas.Services
         {
             var player = gameParticipantsRepository.Filter(x => x.GameId == gameId && x.PlayerId == userId).FirstOrDefault();
             if(player is null)
-                throw new ArgumentException("User does not participate in the game");
+                throw new NotFoundException("User does not participate in the game");
             var answers = submitedAnswersRepository.GetAnswersByPlayer(player.Id);
             return answers.Select(x => mapper.Map<SubmitedAnswerResponse>(x));
         }
@@ -49,13 +50,13 @@ namespace Ogmas.Services
         {
             var game = organizedGamesRepository.Get(gameId);
             if(game is null)
-                throw new ArgumentException("game does not exist");
+                throw new NotFoundException("game does not exist");
             if(game.StartTime.CompareTo(DateTime.UtcNow) <= 0)
-                throw new InvalidOperationException("game has already started");
+                throw new InvalidActionException("game has already started");
 
             var playerFound = gameParticipantsRepository.Filter(x => x.GameId == gameId && x.PlayerId == userId).FirstOrDefault();
             if(!(playerFound is null))
-                throw new InvalidOperationException("player is already in game");
+                throw new InvalidActionException("player is already in game");
             var players = gameParticipantsRepository.GetParticipantsByGame(gameId).Count();
             
             var participant = new GameParticipant
@@ -74,7 +75,7 @@ namespace Ogmas.Services
         {
             var found = gameParticipantsRepository.Get(playerId);
             if(found is null)
-                throw new ArgumentException("player does not exist");
+                throw new NotFoundException("player does not exist");
             
             var player = await gameParticipantsRepository.Delete(playerId);
             return mapper.Map<PlayerResponse>(player);
@@ -84,20 +85,20 @@ namespace Ogmas.Services
         {
             var player = gameParticipantsRepository.GetParticipantByGameAndUser(gameId, playerId);
             if(player is null)
-                throw new Exception("Player is not in the game");
+                throw new NotFoundException("Player is not in the game");
 
             var answered = submitedAnswersRepository.Filter(x => x.GameId == gameId && x.PlayerId == player.Id && x.QuestionId == questionId);
             if(answered.Count() != 0)
-                throw new InvalidOperationException("Question is already answered");
+                throw new InvalidActionException("Question is already answered");
 
             var organizedGame = organizedGamesRepository.Get(gameId);
             var game = gamesRepository.Get(organizedGame.GameTypeId);
             if(game is null)
-                throw new Exception("Game does not exist");
+                throw new NotFoundException("Game does not exist");
 
             var answer = taskAnswersRepository.Filter(x => x.Id == answerId && x.GameTask.Id == questionId && x.GameTask.GameId == game.Id);
             if(answer.Count() != 1)
-                throw new Exception("Answer for this question in this game was not found");
+                throw new NotFoundException("Answer for this question in this game was not found");
 
             var submited = await submitedAnswersRepository.Add(new SubmitedAnswer()
             {
