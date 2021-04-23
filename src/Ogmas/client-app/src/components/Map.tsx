@@ -13,10 +13,12 @@ import { Question } from '../types/types';
 interface Props {
   questions: Question[];
   onQuestionSelected: (question?: Question) => void;
+  removeSelectedCallback: (func: () => void) => void;
 }
 
 export const Map = (props: Props) => {
   const map = useMap("map");
+  const [selectedFeature, setSelectedFeature] = React.useState<Feature>();
   const accuracyFeature = useFeature();
   const positionFeature = useFeature(new Style({
     image: new CircleStyle({
@@ -34,6 +36,7 @@ export const Map = (props: Props) => {
   const vectorLayerSource = useVectorLayer(map, [accuracyFeature, positionFeature]);
   useSelect(map, e => {
     if (!e.selected.length) {
+      setSelectedFeature(undefined);
       props.onQuestionSelected(undefined);
       return;
     }
@@ -41,10 +44,17 @@ export const Map = (props: Props) => {
     e.selected.forEach(feature => {
       const question: Question | undefined = feature.get("question");
       console.log("selected question: ", question?.id);
+      setSelectedFeature(feature);
       props.onQuestionSelected(question);
       // console.log("selected feature which has question: ", feature.get("questionId"));
     });
   });
+
+  React.useEffect(() => {
+    props.removeSelectedCallback(() => {
+      selectedFeature && vectorLayerSource.removeFeature(selectedFeature);
+    })
+  }, [selectedFeature]);
 
   React.useEffect(() => {
     geolocation.on("change:accuracyGeometry", () => {

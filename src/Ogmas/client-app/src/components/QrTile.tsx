@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 
 interface Props {
   title: string;
+  subtitle: string;
   value: string;
   correct?: boolean;
 }
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 275
   },
   title: {
-    marginBottom: 12
+    marginLeft: 12
   }
 }));
 
@@ -29,13 +30,16 @@ export const QrTile = (props: Props) => {
 
   return (
     <Fragment>
-      <QrCode value={props.value} size={128} includeMargin={false} style={{ marginLeft: "48px"}} />
-      <Grid container>
-        <Grid item xs={1}>
+      <QrCode value={props.value} size={128} includeMargin={false} />
+      <Grid container className={classes.title} alignItems="center">
+        <Grid item xs={12}>
+          <Typography variant="body1">Is correct:
           {props.correct ? <CheckIcon color="action" /> : <ClearIcon color="error" />}
+          </Typography>
         </Grid>
-        <Grid item xs={11}>
-          <Typography variant="body1" className={classes.title}>{props.title}</Typography>
+        <Grid item xs={12}>
+          <Typography variant="body1">{props.title}</Typography>
+          <Typography variant="body2">{props.subtitle}</Typography>
         </Grid>
       </Grid>
     </Fragment>

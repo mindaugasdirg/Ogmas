@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ogmas.Models.Dtos.Get;
@@ -13,5 +14,6 @@ namespace Ogmas.Services.Abstractions
         IEnumerable<SubmitedAnswerResponse> GetPlayerAnswers(string gameId, string userId);
         PlayerResponse GetPlayer(string playerId);
         string GetUsername(string playerId);
+        Task<PlayerResponse> FinishGame(string playerId, DateTime time);
     }
 }

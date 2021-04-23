@@ -65,6 +65,13 @@ export interface GameData {
   name: string;
 }
 
+export interface Answer {
+  id: string;
+  answer: string;
+  location: string;
+  isCorrect: boolean;
+}
+
 export interface Question {
   id: string;
   question: string;
@@ -73,6 +80,7 @@ export interface Question {
   y: number;
   radius: number;
   answered?: true;
+  answers?: Answer[];
 }
 
 export type SeverityTypes = Required<AlertProps["severity"]>;

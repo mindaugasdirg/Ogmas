@@ -2,7 +2,7 @@ import { task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import React, { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { getGame, getGameType, getPlayer, getQuestions, submitAnswer } from "../clients/ApiClient";
+import { finishGame, getGame, getGameType, getPlayer, getQuestions, submitAnswer } from "../clients/ApiClient";
 import { useErrorHelper } from "../hooks";
 import { Game, GameData, Player, Question, TypedError } from "../types/types";
 import { AlertsContainer } from "./AlertsContainer";
@@ -16,6 +16,7 @@ import Card from "@material-ui/core/Card";
 import { CardContent, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import { safeCall } from "../utils";
 
 interface RouteParams {
   player: string;
@@ -34,6 +35,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   const [questions, setQuestions] = React.useState<Question[]>([]);
   const [selectedQuestion, setSelectedQuestion] = React.useState<Question>();
   const [showMap, setShowMap] = React.useState(true);
+  const [removeSelected, setRemoveSelected] = React.useState<() => void>();
   const [addAlert, setAddAlert] = useErrorHelper();
   const classes = useStyles();
 
@@ -87,6 +89,24 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
     getGameQuestions();
   }, [gameData]);
 
+  React.useEffect(() => {
+    if(!player) return;
+
+    const sendGameFinish = pipe(
+      finishGame(player.id, new Date()),
+      taskEither.fold(
+        left => task.fromIO(() => addAlert(left.message, "error")),
+        right => task.fromIO(() => {})
+      )
+    );
+
+    const allAnswered = questions.length > 0 && questions.every(x => x.answered);
+    if (allAnswered) {
+      console.log("finishing game");
+      sendGameFinish();
+    }
+  }, [player, questions]);
+
   const handleAnswer = async (answer: string) => {
     if (!game) return;
     if (!selectedQuestion) {
@@ -98,7 +118,11 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       submitAnswer(game.id, selectedQuestion.id, answer),
       taskEither.fold(
         left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => { selectedQuestion.answered = true; })
+        right => task.fromIO(() => {
+          setQuestions([...questions.filter(x => x.id !== selectedQuestion.id), { ...selectedQuestion, answered: true }]);
+          safeCall(removeSelected)();
+          setSelectedQuestion(undefined);
+        })
       ),
       task.map(task.fromIO(() => { setShowMap(true); }))
     );
@@ -132,7 +156,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
         </Fragment>
       }
       {showMap ?
-        <Map questions={definedQuestions} onQuestionSelected={setSelectedQuestion} /> :
+        <Map questions={definedQuestions.filter(x => !x.answered)} onQuestionSelected={setSelectedQuestion} removeSelectedCallback={callback => setRemoveSelected(() => callback)} /> :
         <SubmitAnswer submit={handleAnswer} onError={onError} />
       }
     </Fragment>

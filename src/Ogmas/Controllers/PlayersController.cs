@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ogmas.Services.Abstractions;
@@ -28,6 +29,13 @@ namespace Ogmas.Controllers
         {
             var username = playersService.GetUsername(id);
             return Ok(username);
+        }
+
+        [HttpPatch("{id}/finish/{time}")]
+        public IActionResult FinishTime(string id, DateTime time)
+        {
+            var player = playersService.FinishGame(id, time);
+            return Ok(player);
         }
     }
 }

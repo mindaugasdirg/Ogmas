@@ -133,5 +133,16 @@ namespace Ogmas.Services
 
             return mapper.Map<SubmitedAnswerResponse>(submited);
         }
+
+        public async Task<PlayerResponse> FinishGame(string playerId, DateTime time)
+        {
+            var player = gameParticipantsRepository.Get(playerId);
+            if(player is null)
+                throw new NotFoundException("Player is not in the game");
+
+            player.FinishTime = time;
+            var updated = await gameParticipantsRepository.Update(player);
+            return mapper.Map<PlayerResponse>(updated);
+        }
     }
 }

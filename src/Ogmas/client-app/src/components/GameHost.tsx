@@ -5,8 +5,8 @@ import { array, task, taskEither } from "fp-ts";
 import { flow, pipe } from "fp-ts/lib/function";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { getGame, getPlayers, getUsername } from "../clients/ApiClient";
-import { Game, Player } from "../types/types";
+import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
+import { Game, GameData, Player, Question } from "../types/types";
 import format from "date-fns/format";
 import { makeStyles } from '@material-ui/core/styles';
 import { Fragment } from "react";
@@ -27,6 +27,9 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { useErrorHelper } from "../hooks";
 import { AlertsContainer } from "./AlertsContainer";
+import { GameSetup } from "./GameSetup";
+import { PlayersList } from "./PlayersList";
+import { QuestionsList } from "./QuestionsList";
 
 interface RouteParams {
   game: string;
@@ -59,6 +62,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [hostedGame, setHostedGame] = React.useState<Game>();
+  const [gameData, setGameData] = React.useState<GameData>();
+  const [questions, setQuestions] = React.useState<Question[]>([]);
   const [players, setPlayers] = React.useState<Player[]>();
   const [namedPlayers, setNamedPlayers] = React.useState<Player[]>([]);
   const [addAlert, setAddAlert] = useErrorHelper();
@@ -101,135 +106,42 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
     });
   }, [players]);
 
-  const renderGameSetup = (hosted: Game) => (
-    <Fragment>
-      <Typography variant="body2" component="p">
-        Start time: {hostedGame!.startTime.toLocaleString()}
-        <br />
-        Interval between starts: {format(hostedGame!.startInterval, "HH:mm:ss")}
-      </Typography>
-    </Fragment>
-  );
+  React.useEffect(() => {
+    if (!hostedGame) return;
 
-  const renderPlayers = (players: Player[]) => players.length === 0 ? renderEmptyList() : renderPlayersTable(players);
-  
-  const renderPlayersTable = (players: Player[]) => (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Player</TableCell>
-            <TableCell>Start time</TableCell>
-            <TableCell>Finish time</TableCell>
-            <TableCell>Score</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {array.map((p: Player) => (
-            <TableRow key={p.id}>
-              <TableCell>{p.name || p.id}</TableCell>
-              <TableCell>{p.startTime.toLocaleString()}</TableCell>
-              <TableCell>{p.finishTime ? p.finishTime.toLocaleString() : ""}</TableCell>
-              <TableCell>{0}</TableCell>
-            </TableRow>
-          ))(players)}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  
-  );
-  const renderEmptyList = () => (
-    <Fragment>
-      <Typography variant="body2" component="p">No players have joined yet</Typography>
-    </Fragment>
-  );
+    const getGameData = pipe(
+      getGameType(hostedGame.gameTypeId),
+      taskEither.fold(
+        left => task.fromIO(() => addAlert(left.message, "error")),
+        right => task.fromIO(() => setGameData(right))
+      )
+    );
+    getGameData();
+  }, [hostedGame]);
+
+  React.useEffect(() => {
+    if (!gameData) return;
+
+    const getGameQuestions = pipe(
+      getQuestions(gameData.id),
+      taskEither.chain(flow(
+        array.map((question: Question) => pipe(question.id, getAnswers, taskEither.map(answers => ({ ...question, answers })))),
+        array.sequence(taskEither.taskEither))
+      ),
+      // taskEither.chain(flow(array.map(question => ({ ...question, })), array.sequence(taskEither))),
+      taskEither.fold(
+        left => task.fromIO(() => addAlert(left.message, "error")),
+        right => task.fromIO(() => setQuestions(right))
+      )
+    );
+    getGameQuestions();
+  }, [gameData]);
 
   return (
     <Fragment>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h5" component="h2" className={classes.title}>Game Setup</Typography>
-          <Loader resource={hostedGame} render={renderGameSetup} />
-        </CardContent>
-      </Card>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h5" component="h2" className={classes.title}>Players</Typography>
-          <Typography variant="body1" component="p">Join link: {`${window.location.protocol}//${window.location.host}/join-game/${props.match.params.game}`}</Typography>
-          <Divider className={classes.divider} />
-          <Loader resource={namedPlayers} condition={x => !!x} render={renderPlayers} />
-        </CardContent>
-      </Card>
-      <Paper className={classes.card}>
-        <Typography variant="h5" component="h2" className={classes.paperTitle}>Answers</Typography>
-        <Typography variant="body2" className={classes.paperTitle}>Print each QR code and place them at the correct locations</Typography>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography className={classes.heading}>Quetion 1</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container spacing={3}>
-              <Grid item xs={3}>
-                <QrTile title={"aaaa aaaaaaa aaaaaaaaa aaaaaaaaaa aaaaaaaa"} value={"aaa"} correct={true} />
-              </Grid>
-              <Grid item xs={3}>
-                <QrTile title={"bbb"} value={"bbb"} />
-              </Grid>
-              <Grid item xs={3}>
-                <QrTile title={"ccc"} value={"ccc"} />
-              </Grid>
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography className={classes.heading}>Quetion 2</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container spacing={3}>
-              <Grid item xs={3}>
-                <QrTile title={"aaa"} value={"aaa"} />
-              </Grid>
-              <Grid item xs={3}>
-                <QrTile title={"bbb"} value={"bbb"} />
-              </Grid>
-              <Grid item xs={3}>
-                <QrTile title={"ccc"} value={"ccc"} />
-              </Grid>
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography className={classes.heading}>Quetion 3</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container spacing={3}>
-              <Grid item xs={3}>
-                <QrTile title={"aaa"} value={"aaa"} />
-              </Grid>
-              <Grid item xs={3}>
-                <QrTile title={"bbb"} value={"bbb"} />
-              </Grid>
-              <Grid item xs={3}>
-                <QrTile title={"ccc"} value={"ccc"} />
-              </Grid>
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-      </Paper>
+      <GameSetup game={hostedGame}/>
+      <PlayersList players={namedPlayers} joinLink={`${window.location.protocol}//${window.location.host}/join-game/${props.match.params.game}`} />
+      <QuestionsList questions={questions} />
       <AlertsContainer setter={setAddAlert} />
     </Fragment>
   );
