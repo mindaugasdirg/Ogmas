@@ -59,7 +59,7 @@ export const CreateGame = () => {
     );
 
     updateGameTypes();
-  }, [addAlert]);
+  }, []);
 
   const create = async () => {
     if(!gameType || !startDate || !timeInterval) {

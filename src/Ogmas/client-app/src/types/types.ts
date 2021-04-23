@@ -57,6 +57,22 @@ export interface Player {
   finishTime?: Date;
   gameId: string;
   playerId: string;
+  name?: string;
+}
+
+export interface GameData {
+  id: string;
+  name: string;
+}
+
+export interface Question {
+  id: string;
+  question: string;
+  hint: string;
+  x: number;
+  y: number;
+  radius: number;
+  answered?: true;
 }
 
 export type SeverityTypes = Required<AlertProps["severity"]>;

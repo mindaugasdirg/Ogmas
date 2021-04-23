@@ -31,7 +31,7 @@ export const useMap = (target: string, zoom: number = 14, center: [number, numbe
     })
   }));
 
-  React.useEffect(() => map.setTarget("map"), [map]);
+  React.useEffect(() => map.setTarget(target), [map]);
 
   return map;
 };
@@ -64,7 +64,7 @@ export const useVectorLayer = (map: Map, features: Feature[]) => {
 }
 
 export const useSelect = (map: Map, func: (e: SelectEvent) => void) => {
-  const [select] = React.useState(new Select({ condition: click, filter: (feature) => feature.get("questionId") !== undefined }));
+  const [select] = React.useState(new Select({ condition: click, filter: (feature) => feature.get("question") !== undefined }));
 
   React.useEffect(() => {
     select.on("select", func);

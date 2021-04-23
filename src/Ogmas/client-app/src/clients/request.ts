@@ -19,6 +19,21 @@ export const fetchJson = async <T>(url: string, init?: RequestInit): Promise<T> 
   return response.json();
 };
 
+export const fetchText = async (url: string, init?: RequestInit): Promise<string> => {
+  const response = await fetch(url, init);
+  if (!response.ok) {
+    const error = await getErrorDetails(response);
+    throw new TypedError(error.errorType, error.message);
+  }
+
+  return response.text();
+};
+
+export const getTextRequest = (url: string, headers?: HeadersInit) => taskEither.tryCatch(
+  () => fetchText(url, { headers }) as Promise<string>,
+  errIdentity<TypedError>()
+);
+
 export const getRequest = <T>(url: string, headers?: HeadersInit) => taskEither.tryCatch(
   () => fetchJson(url, { headers }) as Promise<T>,
   errIdentity<TypedError>()

@@ -10,7 +10,7 @@ interface Props {
 export const Layout = (props: Props) => (
   <div>
     <NavMenu />
-    <Container>
+    <Container maxWidth="md">
       <CssBaseline/>
       <div>
         {props.children}

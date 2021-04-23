@@ -27,7 +27,7 @@ export const AlertsContainer = (props: Props) => {
       setMessages(prev => [...prev, { message, severity }]);
       setOpen(true);
     });
-  }, [props, props.setter]);
+  }, []);
 
   React.useEffect(() => {
     if (messages.length && !alert) {

@@ -2,10 +2,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { array, task, taskEither } from "fp-ts";
-import { pipe } from "fp-ts/lib/function";
+import { flow, pipe } from "fp-ts/lib/function";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { getGame, getPlayers } from "../clients/ApiClient";
+import { getGame, getPlayers, getUsername } from "../clients/ApiClient";
 import { Game, Player } from "../types/types";
 import format from "date-fns/format";
 import { makeStyles } from '@material-ui/core/styles';
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [hostedGame, setHostedGame] = React.useState<Game>();
   const [players, setPlayers] = React.useState<Player[]>();
+  const [namedPlayers, setNamedPlayers] = React.useState<Player[]>([]);
   const [addAlert, setAddAlert] = useErrorHelper();
   const classes = useStyles();
 
@@ -82,7 +83,23 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
 
     getHostedGame();
     getGamePlayers();
-  }, [props.match.params.game, addAlert]);
+  }, [props.match.params.game]);
+
+  React.useEffect(() => {
+    const retreiveUsername = (player: Player) => pipe(
+      player.id,
+      getUsername,
+      taskEither.fold(
+        left => task.fromIO(() => addAlert(left.message, "error")),
+        right => task.fromIO(() => setNamedPlayers(prev => [...prev, { ...player, name: right }]))
+      )
+    );
+
+    players?.forEach(async player => {
+      const namingPlayer = retreiveUsername(player);
+      await namingPlayer();
+    });
+  }, [players]);
 
   const renderGameSetup = (hosted: Game) => (
     <Fragment>
@@ -110,7 +127,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
         <TableBody>
           {array.map((p: Player) => (
             <TableRow key={p.id}>
-              <TableCell>{p.id}</TableCell>
+              <TableCell>{p.name || p.id}</TableCell>
               <TableCell>{p.startTime.toLocaleString()}</TableCell>
               <TableCell>{p.finishTime ? p.finishTime.toLocaleString() : ""}</TableCell>
               <TableCell>{0}</TableCell>
@@ -140,7 +157,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
           <Typography variant="h5" component="h2" className={classes.title}>Players</Typography>
           <Typography variant="body1" component="p">Join link: {`${window.location.protocol}//${window.location.host}/join-game/${props.match.params.game}`}</Typography>
           <Divider className={classes.divider} />
-          <Loader resource={players} condition={x => !!x} render={renderPlayers} />
+          <Loader resource={namedPlayers} condition={x => !!x} render={renderPlayers} />
         </CardContent>
       </Card>
       <Paper className={classes.card}>
