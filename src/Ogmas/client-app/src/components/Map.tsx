@@ -9,6 +9,7 @@ import Fab from '@material-ui/core/Fab';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import QrReader from 'react-qr-reader';
+import { FabHolder } from './FabHolder';
 
 export const Map = () => {
   const [showQRReader, setShowQRReader] = React.useState(false);
@@ -93,9 +94,10 @@ export const Map = () => {
     <Fragment>
       {showQRReader ? <QrReader onScan={onScan} onError={onError} /> :
         <div id="map" style={{ height: "640px" }}>
-          <button className="ol-control" onClick={centerToLocation}>center</button>
-          <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
-          <Fab color="primary" onClick={openQrReader}><CameraAltIcon /></Fab>
+          <FabHolder>
+            <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
+            <Fab color="primary" onClick={openQrReader}><CameraAltIcon /></Fab>
+          </FabHolder>
         </div>
       }
     </Fragment>
