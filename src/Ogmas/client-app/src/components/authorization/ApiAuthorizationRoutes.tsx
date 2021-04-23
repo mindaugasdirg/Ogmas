@@ -18,4 +18,3 @@ export const ApiAuthorizationRoutes = () =>
         <Route path={ApplicationPaths.LogOutCallback} render={() => logoutAction(LogoutActions.LogoutCallback)} />
         <Route path={ApplicationPaths.LoggedOut} render={() => logoutAction(LogoutActions.LoggedOut)} />
     </Fragment>;
-

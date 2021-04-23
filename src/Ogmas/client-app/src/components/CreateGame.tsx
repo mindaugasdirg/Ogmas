@@ -13,11 +13,14 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { GameType } from "../types/types";
+import { GameType, SeverityTypes } from "../types/types";
 import { array, task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import { createGame, getGameTypes } from "../clients/ApiClient";
 import { useHistory } from "react-router";
+import { AlertsContainer } from "./AlertsContainer";
+import { safeCall } from "../utils";
+import { useErrorHelper } from "../hooks";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,6 +43,7 @@ export const CreateGame = () => {
   const [gameType, setGameType] = React.useState<string>("");
   const [startDate, setSelectedDate] = React.useState<MaterialUiPickersDate>(new Date());
   const [timeInterval, setTimeInterval] = React.useState<MaterialUiPickersDate>(new Date("2021-01-01T00:05:00.000"));
+  const [addAlert, setAddAlert] = useErrorHelper();
   const history = useHistory();
   const classes = useStyles();
 
@@ -47,21 +51,30 @@ export const CreateGame = () => {
     const updateGameTypes = pipe(
       getGameTypes(),
       taskEither.fold(
-        left => task.fromIO(() => console.log("Error getting games: ", left)),
+        left => task.fromIO(() => {
+          console.log("Error getting games: ", left);
+          addAlert(left.message, "error");
+        }),
         right => task.fromIO(() => setGameTypes(right))
       )
     );
 
     updateGameTypes();
-  }, []);
+  }, [addAlert]);
 
   const create = async () => {
-    if(!gameType || !startDate || !timeInterval) return;
+    if(!gameType || !startDate || !timeInterval) {
+      addAlert("All fields must be filled", "error");
+      return;
+    }
 
     const result = pipe(
       createGame(gameType, startDate, timeInterval),
       taskEither.fold(
-        left => task.fromIO(() => console.log("Game creation failed: ", left)),
+        left => task.fromIO(() => {
+          console.log("Game creation failed: ", left);
+          addAlert(left.message, "error");
+        }),
         right => task.fromIO(() => {
           console.log("Game created: ", right.id);
           console.log("Game: ", right);
@@ -115,6 +128,7 @@ export const CreateGame = () => {
           </form>
         </div>
       </MuiPickersUtilsProvider>
+      <AlertsContainer setter={setAddAlert} />
     </Container>
   );
 };

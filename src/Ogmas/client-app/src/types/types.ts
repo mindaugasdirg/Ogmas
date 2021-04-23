@@ -1,3 +1,5 @@
+import { AlertProps } from "@material-ui/lab/Alert";
+
 export enum AuthenticationResultStatus {
   Redirect = 'redirect',
   Success = 'success',
@@ -56,3 +58,5 @@ export interface Player {
   gameId: string;
   playerId: string;
 }
+
+export type SeverityTypes = Required<AlertProps["severity"]>;

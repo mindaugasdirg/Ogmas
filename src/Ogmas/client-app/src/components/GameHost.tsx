@@ -18,12 +18,15 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import Accordion from "@material-ui/core/Accordion";
+import Divider from '@material-ui/core/Divider';
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import { QrTile } from "./QrTile";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import { useErrorHelper } from "../hooks";
+import { AlertsContainer } from "./AlertsContainer";
 
 interface RouteParams {
   game: string;
@@ -47,19 +50,24 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(2),
     marginBottom: 12
+  },
+  divider: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   }
 }));
 
 export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [hostedGame, setHostedGame] = React.useState<Game>();
   const [players, setPlayers] = React.useState<Player[]>();
+  const [addAlert, setAddAlert] = useErrorHelper();
   const classes = useStyles();
 
   React.useEffect(() => {
     const getHostedGame = pipe(
       getGame(props.match.params.game),
       taskEither.fold(
-        left => task.fromIO(() => console.log("Error getting game: ", left)),
+        left => task.fromIO(() => addAlert(left.message, "error")),
         right => task.fromIO(() => setHostedGame(right))
       )
     );
@@ -67,14 +75,14 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
     const getGamePlayers = pipe(
       getPlayers(props.match.params.game),
       taskEither.fold(
-        left => task.fromIO(() => console.log("Error getting players: ", left)),
+        left => task.fromIO(() => addAlert(left.message, "error")),
         right => task.fromIO(() => setPlayers(right))
       )
     );
 
     getHostedGame();
     getGamePlayers();
-  }, [props.match.params.game]);
+  }, [props.match.params.game, addAlert]);
 
   const renderGameSetup = (hosted: Game) => (
     <Fragment>
@@ -130,6 +138,8 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h5" component="h2" className={classes.title}>Players</Typography>
+          <Typography variant="body1" component="p">Join link: {`${window.location.protocol}//${window.location.host}/join-game/${props.match.params.game}`}</Typography>
+          <Divider className={classes.divider} />
           <Loader resource={players} condition={x => !!x} render={renderPlayers} />
         </CardContent>
       </Card>
@@ -203,6 +213,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
           </AccordionDetails>
         </Accordion>
       </Paper>
+      <AlertsContainer setter={setAddAlert} />
     </Fragment>
   );
 };
