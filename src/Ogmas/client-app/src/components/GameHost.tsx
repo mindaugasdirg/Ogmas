@@ -4,7 +4,6 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
 import { Game, GameData, Player, Question } from "../types/types";
-import { makeStyles } from '@material-ui/core/styles';
 import { Fragment } from "react";
 import { useErrorHelper } from "../hooks";
 import { AlertsContainer } from "./AlertsContainer";
@@ -16,31 +15,6 @@ interface RouteParams {
   game: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  card: {
-    marginTop: theme.spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    minWidth: 275
-  },
-  title: {
-    marginBottom: 12
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-  paperTitle: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
-    marginBottom: 12
-  },
-  divider: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  }
-}));
-
 export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [hostedGame, setHostedGame] = React.useState<Game>();
   const [gameData, setGameData] = React.useState<GameData>();
@@ -48,7 +22,6 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [players, setPlayers] = React.useState<Player[]>();
   const [namedPlayers, setNamedPlayers] = React.useState<Player[]>([]);
   const [addAlert, setAddAlert] = useErrorHelper();
-  const classes = useStyles();
 
   React.useEffect(() => {
     const getHostedGame = pipe(
