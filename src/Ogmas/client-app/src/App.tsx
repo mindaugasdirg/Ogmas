@@ -7,7 +7,6 @@ import { ApiAuthorizationRoutes } from './components/authorization/ApiAuthorizat
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 import { CreateGame } from './components/CreateGame';
 import { GameHost } from './components/GameHost';
-import { Map } from './components/Map';
 import { JoinGame } from './components/JoinGame';
 import { GameView } from './components/GameView';
 
