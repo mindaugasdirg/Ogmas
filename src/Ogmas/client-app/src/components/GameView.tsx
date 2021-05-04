@@ -3,7 +3,7 @@ import { pipe } from "fp-ts/lib/function";
 import React, { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { finishGame, getGame, getGameType, getPlayer, getQuestions, submitAnswer } from "../clients/ApiClient";
-import { useErrorHelper } from "../hooks";
+import { useErrorHelper } from "../functions/hooks";
 import { Game, GameData, Player, Question, TypedError } from "../types/types";
 import { AlertsContainer } from "./AlertsContainer";
 import { Loader } from "./Loader";
@@ -15,7 +15,7 @@ import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Card from "@material-ui/core/Card";
 import { CardContent, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { safeCall } from "../utils";
+import { safeCall } from "../functions/utils";
 
 interface RouteParams {
   player: string;

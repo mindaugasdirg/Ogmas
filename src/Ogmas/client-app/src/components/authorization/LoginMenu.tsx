@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { getUser, isAuthenticated } from '../../clients/AuthorizationClient';
-import { ApplicationPaths } from '../../constants/ApiAuthorizationConstants';
+import { ApplicationPaths } from '../../ApiAuthorizationConstants';
 
 interface LogoutPath {
   pathname: string;

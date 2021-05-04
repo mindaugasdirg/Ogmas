@@ -30,7 +30,7 @@ namespace Ogmas.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> LeaveGame(string gameId, string id)
         {
-            var player = await playersService.LeaveGame(id);
+            await playersService.LeaveGame(id);
             return NoContent();
         }
 

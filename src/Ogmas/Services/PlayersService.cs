@@ -6,7 +6,7 @@ using AutoMapper;
 using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
-using Ogmas.Repositories;
+using Ogmas.Repositories.Abstractions;
 using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Services
@@ -14,16 +14,16 @@ namespace Ogmas.Services
     public class PlayersService : IPlayersService
     {
         private readonly IMapper mapper;
-        private readonly GameParticipantsRepository gameParticipantsRepository;
-        private readonly OrganizedGamesRepository organizedGamesRepository;
-        private readonly SubmitedAnswersRepository submitedAnswersRepository;
-        private readonly GamesRepository gamesRepository;
-        private readonly TaskAnswersRepository taskAnswersRepository;
-        private readonly UserRepository userRepository;
+        private readonly IGameParticipantsRepository gameParticipantsRepository;
+        private readonly IOrganizedGamesRepository organizedGamesRepository;
+        private readonly ISubmitedAnswersRepository submitedAnswersRepository;
+        private readonly IGamesRepository gamesRepository;
+        private readonly ITaskAnswersRepository taskAnswersRepository;
+        private readonly IUserRepository userRepository;
 
-        public PlayersService(IMapper _mapper, GameParticipantsRepository _gameParticipantsRepository, OrganizedGamesRepository _organizedGamesRepository,
-                              SubmitedAnswersRepository _submitedAnswersRepository, GamesRepository _gamesRepository, TaskAnswersRepository _taskAnswersRepository,
-                              UserRepository _userRepository)
+        public PlayersService(IMapper _mapper, IGameParticipantsRepository _gameParticipantsRepository, IOrganizedGamesRepository _organizedGamesRepository,
+                              ISubmitedAnswersRepository _submitedAnswersRepository, IGamesRepository _gamesRepository, ITaskAnswersRepository _taskAnswersRepository,
+                              IUserRepository _userRepository)
         {
             mapper = _mapper;
             gameParticipantsRepository = _gameParticipantsRepository;

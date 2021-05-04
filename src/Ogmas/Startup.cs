@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Ogmas.Exceptions;
 using Ogmas.Models.Entities;
 using Ogmas.Repositories;
+using Ogmas.Repositories.Abstractions;
 using Ogmas.Services;
 using Ogmas.Services.Abstractions;
 
@@ -32,13 +33,13 @@ namespace Ogmas
             services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConntectionString")));
 
             // repositories
-            services.AddTransient<GameParticipantsRepository>();
-            services.AddTransient<GamesRepository>();
-            services.AddTransient<GameTasksRepository>();
-            services.AddTransient<OrganizedGamesRepository>();
-            services.AddTransient<SubmitedAnswersRepository>();
-            services.AddTransient<TaskAnswersRepository>();
-            services.AddTransient<UserRepository>();
+            services.AddTransient<IGameParticipantsRepository, GameParticipantsRepository>();
+            services.AddTransient<IGamesRepository, GamesRepository>();
+            services.AddTransient<IGameTasksRepository, GameTasksRepository>();
+            services.AddTransient<IOrganizedGamesRepository, OrganizedGamesRepository>();
+            services.AddTransient<ISubmitedAnswersRepository, SubmitedAnswersRepository>();
+            services.AddTransient<ITaskAnswersRepository, TaskAnswersRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             // services
             services.AddAutoMapper(typeof(Startup));

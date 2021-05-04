@@ -1,8 +1,9 @@
 using System.Linq;
+using Ogmas.Repositories.Abstractions;
 
 namespace Ogmas.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         protected readonly DatabaseContext context;
 

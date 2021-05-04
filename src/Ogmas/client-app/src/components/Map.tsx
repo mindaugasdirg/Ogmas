@@ -2,7 +2,7 @@ import 'ol/ol.css';
 import React, { Fragment } from "react";
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
-import { useFeature, useGeolocation, useMap, useSelect, useVectorLayer } from "../hooks";
+import { useFeature, useGeolocation, useMap, useSelect, useVectorLayer } from "../functions/hooks";
 import Circle from 'ol/geom/Circle';
 import { Feature } from 'ol';
 import Fab from '@material-ui/core/Fab';

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Get;
-using Ogmas.Repositories;
+using Ogmas.Repositories.Abstractions;
 using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Services
@@ -13,9 +13,9 @@ namespace Ogmas.Services
     public class GameTasksService : IGameTasksService
     {
         private readonly IMapper mapper;
-        private readonly GameTasksRepository gameTasksRepository;
+        private readonly IGameTasksRepository gameTasksRepository;
 
-        public GameTasksService(IMapper _mapper, GameTasksRepository _gameTasksRepository)
+        public GameTasksService(IMapper _mapper, IGameTasksRepository _gameTasksRepository)
         {
             mapper = _mapper;
             gameTasksRepository = _gameTasksRepository;

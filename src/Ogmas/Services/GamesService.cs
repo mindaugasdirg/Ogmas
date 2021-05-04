@@ -7,7 +7,7 @@ using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
-using Ogmas.Repositories;
+using Ogmas.Repositories.Abstractions;
 using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Services
@@ -15,10 +15,10 @@ namespace Ogmas.Services
     public class GamesService : IGamesService
     {
         private readonly IMapper mapper;
-        private readonly OrganizedGamesRepository organizedGamesRepository;
-        private readonly GamesRepository gamesRepository;
+        private readonly IOrganizedGamesRepository organizedGamesRepository;
+        private readonly IGamesRepository gamesRepository;
 
-        public GamesService(IMapper _mapper, OrganizedGamesRepository _organizedGamesRepository, GamesRepository _gamesRepository)
+        public GamesService(IMapper _mapper, IOrganizedGamesRepository _organizedGamesRepository, IGamesRepository _gamesRepository)
         {
             mapper = _mapper;
             organizedGamesRepository = _organizedGamesRepository;

@@ -1,6 +1,6 @@
 import React from 'react'
 import { completeSignOut, isAuthenticated, signOut } from '../../clients/AuthorizationClient';
-import { ApplicationPaths, LogoutActions, QueryParameterNames } from '../../constants/ApiAuthorizationConstants';
+import { ApplicationPaths, LogoutActions, QueryParameterNames } from '../../ApiAuthorizationConstants';
 import { AuthenticationResultStatus } from '../../types/types';
 
 const getReturnUrl = (state?: { returnUrl?: string }) => {

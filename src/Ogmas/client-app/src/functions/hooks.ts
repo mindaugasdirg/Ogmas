@@ -12,7 +12,7 @@ import { useGeographic as useGeoCoords } from 'ol/proj';
 import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import { safeCall } from "./utils";
-import { SeverityTypes } from "./types/types";
+import { SeverityTypes } from "../types/types";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();

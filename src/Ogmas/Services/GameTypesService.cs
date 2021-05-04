@@ -7,7 +7,7 @@ using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
-using Ogmas.Repositories;
+using Ogmas.Repositories.Abstractions;
 using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Services
@@ -15,11 +15,11 @@ namespace Ogmas.Services
     public class GameTypesService : IGameTypesService
     {
         private readonly IMapper mapper;
-        private readonly GamesRepository gamesRepository;
-        private readonly GameTasksRepository gameTasksRepository;
-        private readonly TaskAnswersRepository taskAnswersRepository;
+        private readonly IGamesRepository gamesRepository;
+        private readonly IGameTasksRepository gameTasksRepository;
+        private readonly ITaskAnswersRepository taskAnswersRepository;
 
-        public GameTypesService(IMapper _mapper, GamesRepository _gamesRepository, GameTasksRepository _gameTasksRepository, TaskAnswersRepository _taskAnswersRepository)
+        public GameTypesService(IMapper _mapper, IGamesRepository _gamesRepository, IGameTasksRepository _gameTasksRepository, ITaskAnswersRepository _taskAnswersRepository)
         {
             mapper = _mapper;
             gamesRepository = _gamesRepository;
@@ -67,7 +67,7 @@ namespace Ogmas.Services
             {
                 var answer = mapper.Map<TaskAnswer>(answerDto);
                 answer.GameTaskId = taskId;
-                var createdAnswer = await taskAnswersRepository.Add(answer);
+                await taskAnswersRepository.Add(answer);
             }
         }
     }

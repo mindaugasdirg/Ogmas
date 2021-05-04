@@ -3,7 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Get;
-using Ogmas.Repositories;
+using Ogmas.Repositories.Abstractions;
 using Ogmas.Services.Abstractions;
 
 namespace Ogmas.Services
@@ -11,9 +11,9 @@ namespace Ogmas.Services
     public class AnswersService : IAnswersService
     {
         private readonly IMapper mapper;
-        private readonly TaskAnswersRepository taskAnswersRepository;
+        private readonly ITaskAnswersRepository taskAnswersRepository;
 
-        public AnswersService(IMapper _mapper, TaskAnswersRepository _taskAnswersRepository)
+        public AnswersService(IMapper _mapper, ITaskAnswersRepository _taskAnswersRepository)
         {
             mapper = _mapper;
             taskAnswersRepository = _taskAnswersRepository;
