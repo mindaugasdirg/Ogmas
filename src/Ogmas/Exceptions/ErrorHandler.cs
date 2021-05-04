@@ -20,9 +20,9 @@ namespace Ogmas.Exceptions
 
             context.Response.StatusCode = exception switch
             {
-                InvalidActionException e => context.Response.StatusCode = 400,
-                NotFoundException e => context.Response.StatusCode = 404,
-                ArgumentException e => context.Response.StatusCode = 400,
+                InvalidActionException _ => context.Response.StatusCode = 400,
+                NotFoundException _ => context.Response.StatusCode = 404,
+                ArgumentException _ => context.Response.StatusCode = 400,
                 _ => context.Response.StatusCode = 500
             };
             await context.Response.WriteJsonAsync(error, "application/json");

@@ -67,7 +67,7 @@ namespace Ogmas.Services
             {
                 var answer = mapper.Map<TaskAnswer>(answerDto);
                 answer.GameTaskId = taskId;
-                var createdAnswer = await taskAnswersRepository.Add(answer);
+                await taskAnswersRepository.Add(answer);
             }
         }
     }
