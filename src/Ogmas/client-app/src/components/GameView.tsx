@@ -3,7 +3,7 @@ import { pipe } from "fp-ts/lib/function";
 import React, { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { finishGame, getGame, getGameType, getPlayer, getQuestions, submitAnswer } from "../clients/ApiClient";
-import { useErrorHelper } from "../functions/hooks";
+import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
 import { Game, GameData, Player, Question, TypedError } from "../types/types";
 import { AlertsContainer } from "./AlertsContainer";
 import { Loader } from "./Loader";
@@ -31,6 +31,8 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   const [removeSelected, setRemoveSelected] = React.useState<() => void>();
   const [addAlert, setAddAlert] = useErrorHelper();
 
+  useAuthorizeComponent();
+
   React.useEffect(() => {
     const getGamePlayer = pipe(
       getPlayer(props.match.params.player),
@@ -40,7 +42,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGamePlayer();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.match.params.player]);
 
   React.useEffect(() => {
@@ -54,7 +56,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getCurrentGame();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player]);
 
   React.useEffect(() => {
@@ -68,7 +70,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGameData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
   React.useEffect(() => {
@@ -82,17 +84,17 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       )
     );
     getGameQuestions();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData]);
 
   React.useEffect(() => {
-    if(!player) return;
+    if (!player) return;
 
     const sendGameFinish = pipe(
       finishGame(player.id, new Date()),
       taskEither.fold(
         left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => {})
+        right => task.fromIO(() => { })
       )
     );
 
@@ -101,7 +103,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       console.log("finishing game");
       sendGameFinish();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, questions]);
 
   const handleAnswer = async (answer: string) => {
@@ -137,31 +139,37 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
     setShowMap(!showMap);
   };
 
-  const renderView = ({ questions: definedQuestions }: { questions: Question[] }) => (
-    <Fragment>
-      {selectedQuestion &&
-        <Fragment>
-          <Card>
-            <CardContent>
-              <Typography variant="body1">{selectedQuestion.question}</Typography>
-              <Button variant="text" onClick={giveHint}>Hint</Button>
-            </CardContent>
-          </Card>
-          <FabHolder side="left">
-            <Fab color="primary" onClick={toggleQrMode}><CameraAltIcon /></Fab>
-          </FabHolder>
-        </Fragment>
-      }
-      {showMap ?
-        <Map questions={definedQuestions.filter(x => !x.answered)} onQuestionSelected={setSelectedQuestion} removeSelectedCallback={callback => setRemoveSelected(() => callback)} /> :
-        <SubmitAnswer submit={handleAnswer} onError={onError} />
-      }
-    </Fragment>
-  );
+  const renderView = ({ questions: definedQuestions, player: definedPlayer }: { questions: Question[]; player: Player }) => {
+    if(definedPlayer.startTime.getTime() > new Date().getTime()) {
+      return <Typography variant="body1">You start at {definedPlayer.startTime.toLocaleString()}</Typography>
+    }
+
+    return (
+      <Fragment>
+        {selectedQuestion &&
+          <Fragment>
+            <Card>
+              <CardContent>
+                <Typography variant="body1">{selectedQuestion.question}</Typography>
+                <Button variant="text" onClick={giveHint}>Hint</Button>
+              </CardContent>
+            </Card>
+            <FabHolder side="left">
+              <Fab color="primary" onClick={toggleQrMode}><CameraAltIcon /></Fab>
+            </FabHolder>
+          </Fragment>
+        }
+        {showMap ?
+          <Map questions={definedQuestions.filter(x => !x.answered)} onQuestionSelected={setSelectedQuestion} removeSelectedCallback={callback => setRemoveSelected(() => callback)} /> :
+          <SubmitAnswer submit={handleAnswer} onError={onError} />
+        }
+      </Fragment>
+    );
+  }
 
   return (
     <div>
-      <Loader resource={{ questions, gameData, game } as any} condition={(data: any) => data && data.game && data.gameData && data.questions?.length} render={renderView} />
+      <Loader resource={{ questions, gameData, game, player } as any} condition={(data: any) => data && data.game && data.gameData && data.questions?.length} render={renderView} />
       <AlertsContainer setter={setAddAlert} />
     </div>
   );

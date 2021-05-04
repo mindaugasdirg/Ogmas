@@ -19,7 +19,7 @@ import { pipe } from "fp-ts/lib/function";
 import { createGame, getGameTypes } from "../clients/ApiClient";
 import { useHistory } from "react-router";
 import { AlertsContainer } from "./AlertsContainer";
-import { useErrorHelper } from "../functions/hooks";
+import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,6 +45,8 @@ export const CreateGame = () => {
   const [addAlert, setAddAlert] = useErrorHelper();
   const history = useHistory();
   const classes = useStyles();
+
+  useAuthorizeComponent();
 
   React.useEffect(() => {
     const updateGameTypes = pipe(

@@ -13,6 +13,8 @@ import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import { safeCall } from "./utils";
 import { SeverityTypes } from "../types/types";
+import { useHistory } from "react-router-dom";
+import { isAuthenticated } from "../clients/AuthorizationClient";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();
@@ -77,3 +79,18 @@ export const useErrorHelper =
   const [addAlert, setAddAlert] = React.useState<(message: string, severity: SeverityTypes) => void>();
   return [safeCall(addAlert), setAddAlert];
 };
+
+export const useAuthorizeComponent = () => {
+  const history = useHistory();
+  
+  React.useEffect(() => {
+    const redirectIfUnauthorized = async () => {
+      const authenticatedResult = await isAuthenticated();
+      if(!authenticatedResult) {
+        history.push("/");
+      }
+    };
+
+    redirectIfUnauthorized();
+  }, [history]);
+}

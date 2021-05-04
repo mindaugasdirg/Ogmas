@@ -19,7 +19,6 @@ const App = () => {
       <Route path='/join-game/:game' component={JoinGame} />
       <Route path='/game-host/:game' component={GameHost} />
       <Route path='/game/:player' component={GameView} />
-      <Route path='/player' component={Map} />
       <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
     </Layout>
   );
