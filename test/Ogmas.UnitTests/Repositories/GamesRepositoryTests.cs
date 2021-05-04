@@ -26,23 +26,6 @@ namespace Ogmas.UnitTests.Repositories
         }
 
         [Test]
-        public async Task SearchGamesByName_WhenNameIsProvided_ShouldReturnFoundGames()
-        {
-            var repository = new GamesRepository(_dbContext);
-            await repository.Add(new Game
-            {
-                Name = "Example game",
-                Ready = true
-            });
-
-            var found = repository.SearchGamesByName("game");
-
-            found.Count().ShouldBe(1);
-            var game = found.First();
-            game.Name.ShouldBe("Example game");
-        }
-
-        [Test]
         public async Task GetReadyGames_WhenCalled_ShouldReturnReadyGames()
         {
             var repository = new GamesRepository(_dbContext);

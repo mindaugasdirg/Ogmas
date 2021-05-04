@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Route } from 'react-router';
-import { ApplicationPaths, LoginActions, LogoutActions } from '../../constants/ApiAuthorizationConstants';
+import { ApplicationPaths, LoginActions, LogoutActions } from '../../ApiAuthorizationConstants';
 import { Login } from './Login'
 import { Logout } from './Logout'
 

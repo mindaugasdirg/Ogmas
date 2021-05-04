@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ogmas.Models.Entities;
+using Ogmas.Repositories.Abstractions;
 
 namespace Ogmas.Repositories
 {
-    public class SubmitedAnswersRepository : BaseEntityRepository<SubmitedAnswer>
+    public class SubmitedAnswersRepository : BaseEntityRepository<SubmitedAnswer>, ISubmitedAnswersRepository
     {
         public SubmitedAnswersRepository(DatabaseContext context) : base(context)
         {

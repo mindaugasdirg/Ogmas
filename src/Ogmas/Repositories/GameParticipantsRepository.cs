@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Ogmas.Models.Entities;
+using Ogmas.Repositories.Abstractions;
 
 namespace Ogmas.Repositories
 {
-    public class GameParticipantsRepository : BaseEntityRepository<GameParticipant>
+    public class GameParticipantsRepository : BaseEntityRepository<GameParticipant>, IGameParticipantsRepository
     {
         public GameParticipantsRepository(DatabaseContext context) : base(context)
         {

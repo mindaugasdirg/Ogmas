@@ -1,6 +1,6 @@
 import React from 'react'
 import { completeSignIn, signIn } from '../../clients/AuthorizationClient';
-import { ApplicationPaths, LoginActions, QueryParameterNames } from '../../constants/ApiAuthorizationConstants';
+import { ApplicationPaths, LoginActions, QueryParameterNames } from '../../ApiAuthorizationConstants';
 import { AuthenticationResultStatus } from '../../types/types';
 
 const redirectToApiAuthorizationPath = (apiAuthorizationPath: string) => {

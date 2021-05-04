@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { ApiAuthorizationRoutes } from './components/authorization/ApiAuthorizationRoutes';
-import { ApplicationPaths } from './constants/ApiAuthorizationConstants';
+import { ApplicationPaths } from './ApiAuthorizationConstants';
 import { CreateGame } from './components/CreateGame';
 import { GameHost } from './components/GameHost';
 import { Map } from './components/Map';

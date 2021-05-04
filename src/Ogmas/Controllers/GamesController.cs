@@ -29,12 +29,6 @@ namespace Ogmas.Controllers
             return Created($"/api/games/{created.Id}", created);
         }
 
-        [HttpPatch("{id}")]
-        public IActionResult UpdateGame(string id, [FromBody] object gameOptions)
-        {
-            return Ok();
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGame(string id)
         {

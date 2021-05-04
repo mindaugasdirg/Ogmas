@@ -5,7 +5,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
 import { Game, GameData, Player, Question } from "../types/types";
 import { Fragment } from "react";
-import { useErrorHelper } from "../hooks";
+import { useErrorHelper } from "../functions/hooks";
 import { AlertsContainer } from "./AlertsContainer";
 import { GameSetup } from "./GameSetup";
 import { PlayersList } from "./PlayersList";

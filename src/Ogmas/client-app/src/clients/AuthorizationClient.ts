@@ -1,9 +1,9 @@
 import { taskEither } from "fp-ts";
 import { memoize } from "lodash/fp";
 import { User, UserManager, UserManagerSettings, WebStorageStateStore } from "oidc-client";
-import { ApplicationPaths } from "../constants/ApiAuthorizationConstants";
+import { ApplicationPaths } from "../ApiAuthorizationConstants";
 import { AuthenticationErrorResult, AuthenticationRedirectResult, AuthenticationResult, AuthenticationResultStatus, AuthenticationSuccessResult, TypedError } from "../types/types";
-import { mapError } from "../utils";
+import { mapError } from "../functions/utils";
 import { fetchJson } from "./request";
 
 const defaultSettings: UserManagerSettings = {

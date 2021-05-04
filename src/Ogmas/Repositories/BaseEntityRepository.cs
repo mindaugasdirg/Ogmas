@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ogmas.Exceptions;
 using Ogmas.Models.Entities;
+using Ogmas.Repositories.Abstractions;
 
 namespace Ogmas.Repositories
 {
-    public abstract class BaseEntityRepository<T> where T : BaseEntity
+    public abstract class BaseEntityRepository<T> : IBaseEntityRepository<T> where T : BaseEntity
     {
         protected readonly DatabaseContext Context;
 

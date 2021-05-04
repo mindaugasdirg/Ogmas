@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ogmas.Models.Entities;
+using Ogmas.Repositories.Abstractions;
 
 namespace Ogmas.Repositories
 {
-    public class GameTasksRepository : BaseEntityRepository<GameTask>
+    public class GameTasksRepository : BaseEntityRepository<GameTask>, IGameTasksRepository
     {
         public GameTasksRepository(DatabaseContext context) : base(context)
         {

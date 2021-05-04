@@ -1,6 +1,6 @@
 import { taskEither } from "fp-ts";
 import { ErrorDto, TypedError } from "../types/types";
-import { errIdentity } from "../utils";
+import { errIdentity } from "../functions/utils";
 
 const getErrorDetails = async (response: Response): Promise<ErrorDto> => {
   if(response.status === 401) {
