@@ -5,7 +5,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
 import { Game, GameData, Player, Question } from "../types/types";
 import { Fragment } from "react";
-import { useErrorHelper } from "../functions/hooks";
+import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
 import { AlertsContainer } from "./AlertsContainer";
 import { GameSetup } from "./GameSetup";
 import { PlayersList } from "./PlayersList";
@@ -22,6 +22,8 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [players, setPlayers] = React.useState<Player[]>();
   const [namedPlayers, setNamedPlayers] = React.useState<Player[]>([]);
   const [addAlert, setAddAlert] = useErrorHelper();
+
+  useAuthorizeComponent();
 
   React.useEffect(() => {
     const getHostedGame = pipe(

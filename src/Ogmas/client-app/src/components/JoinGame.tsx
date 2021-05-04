@@ -4,6 +4,7 @@ import { pipe } from "fp-ts/lib/function";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import { joinGame } from "../clients/ApiClient";
+import { useAuthorizeComponent } from "../functions/hooks";
 
 interface RouteParams {
   game: string;
@@ -11,6 +12,8 @@ interface RouteParams {
 
 export const JoinGame = (props: RouteComponentProps<RouteParams>) => {
   const history = useHistory();
+
+  useAuthorizeComponent();
 
   React.useEffect(() => {
     pipe(

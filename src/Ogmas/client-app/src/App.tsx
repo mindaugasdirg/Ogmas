@@ -7,7 +7,6 @@ import { ApiAuthorizationRoutes } from './components/authorization/ApiAuthorizat
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 import { CreateGame } from './components/CreateGame';
 import { GameHost } from './components/GameHost';
-import { Map } from './components/Map';
 import { JoinGame } from './components/JoinGame';
 import { GameView } from './components/GameView';
 
@@ -19,7 +18,6 @@ const App = () => {
       <Route path='/join-game/:game' component={JoinGame} />
       <Route path='/game-host/:game' component={GameHost} />
       <Route path='/game/:player' component={GameView} />
-      <Route path='/player' component={Map} />
       <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
     </Layout>
   );
