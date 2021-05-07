@@ -29,7 +29,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./test/Ogmas.UnitTests/CodeCoverage/coverage.info
     - name: dotnet publish
-      run: dotnet publish -c Release -o \${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o \${{env.DOTNET_ROOT}}/myapp ./src/Ogmas/Ogmas.csproj
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
