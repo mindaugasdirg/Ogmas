@@ -58,7 +58,9 @@ namespace Ogmas
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<DatabaseContext>();
-            services.AddIdentityServer().AddApiAuthorization<User, DatabaseContext>();
+            services.AddIdentityServer(options => {
+                options.IssuerUri = Configuration.GetValue<string>("IdentityServer__IssuerUri");
+            }).AddApiAuthorization<User, DatabaseContext>();
             services.AddAuthentication().AddIdentityServerJwt();
 
             services.AddControllersWithViews();
