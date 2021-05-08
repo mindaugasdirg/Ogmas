@@ -30,7 +30,7 @@ namespace Ogmas
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DbConntectionString")));
+            services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Configuration.GetConnectionString("POSTGRESQLCONNSTR_DbConntectionString")));
 
             // repositories
             services.AddTransient<IGameParticipantsRepository, GameParticipantsRepository>();
