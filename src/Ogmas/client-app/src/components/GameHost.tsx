@@ -10,6 +10,7 @@ import { AlertsContainer } from "./AlertsContainer";
 import { GameSetup } from "./GameSetup";
 import { PlayersList } from "./PlayersList";
 import { QuestionsList } from "./QuestionsList";
+import { foldError } from "../functions/utils";
 
 interface RouteParams {
   game: string;
@@ -28,18 +29,12 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   React.useEffect(() => {
     const getHostedGame = pipe(
       getGame(props.match.params.game),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setHostedGame(right))
-      )
+      foldError(addAlert, setHostedGame)
     );
 
     const getGamePlayers = pipe(
       getPlayers(props.match.params.game),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setPlayers(right))
-      )
+      foldError(addAlert, setPlayers)
     );
 
     getHostedGame();
@@ -51,10 +46,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
     const retreiveUsername = (player: Player) => pipe(
       player.id,
       getUsername,
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setNamedPlayers(prev => [...prev, { ...player, name: right }]))
-      )
+      foldError(addAlert, right => setNamedPlayers(prev => [...prev, { ...player, name: right }]))
     );
 
     players?.forEach(async player => {
@@ -69,10 +61,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
 
     const getGameData = pipe(
       getGameType(hostedGame.gameTypeId),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setGameData(right))
-      )
+      foldError(addAlert, setGameData)
     );
     getGameData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,11 +76,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
         array.map((question: Question) => pipe(question.id, getAnswers, taskEither.map(answers => ({ ...question, answers })))),
         array.sequence(taskEither.taskEither))
       ),
-      // taskEither.chain(flow(array.map(question => ({ ...question, })), array.sequence(taskEither))),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setQuestions(right))
-      )
+      foldError(addAlert, setQuestions)
     );
     getGameQuestions();
   // eslint-disable-next-line react-hooks/exhaustive-deps
