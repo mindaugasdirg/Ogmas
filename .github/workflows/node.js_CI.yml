@@ -6,6 +6,8 @@ name: WebApp CI
 on:
   pull_request:
     branches: [ master ]
+    paths:
+      - './src/Ogmas/client-app/**'
 
 jobs:
   build:
