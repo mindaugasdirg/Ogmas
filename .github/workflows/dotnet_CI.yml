@@ -3,10 +3,6 @@ name: API CI
 on:
   pull_request:
     branches: [ master ]
-    paths:
-      - './src/**'
-      - '!./src/Ogmas/client-app/**'
-      - './test/**'
 
 jobs:
   build:
