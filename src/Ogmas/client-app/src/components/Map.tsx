@@ -21,7 +21,7 @@ export const Map = (props: Props) => {
   const theme = useTheme();
   const wideScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const screenHeight = useScreenHeight();
-  const map = useMap("map");
+  const map = useMap("map", screenHeight);
   const [selectedFeature, setSelectedFeature] = React.useState<Feature>();
   const accuracyFeature = useFeature();
   const positionFeature = useFeature(new Style({

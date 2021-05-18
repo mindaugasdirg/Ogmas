@@ -12,14 +12,14 @@ import { useGeographic as useGeoCoords } from 'ol/proj';
 import Select, { SelectEvent } from 'ol/interaction/Select';
 import { click } from 'ol/events/condition';
 import { safeCall } from "./utils";
-import { SeverityTypes } from "../types/types";
+import { Game, SeverityTypes } from "../types/types";
 import { useHistory } from "react-router-dom";
-import { isAuthenticated } from "../clients/AuthorizationClient";
+import { getUser, isAuthenticated } from "../clients/AuthorizationClient";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();
 
-export const useMap = (target: string, zoom: number = 14, center: [number, number] = [0, 0]) => {
+export const useMap = (target: string, screenHeight: number, zoom: number = 14, center: [number, number] = [0, 0]) => {
   const [map] = React.useState(new Map({
     // controls: defaultControls().extend([]),
     layers: [
@@ -33,7 +33,10 @@ export const useMap = (target: string, zoom: number = 14, center: [number, numbe
     })
   }));
 
-  React.useEffect(() => map.setTarget(target), [map, target]);
+  React.useEffect(() => {
+    if(!screenHeight) return;
+    map.setTarget(target);
+  }, [map, target, screenHeight]);
 
   return map;
 };
@@ -94,6 +97,27 @@ export const useAuthorizeComponent = () => {
     redirectIfUnauthorized();
   }, [history]);
 };
+
+export const useCheckIfHost = (game?: Game) => {
+  const [isHost, setIsHost] = React.useState(false);
+  const history = useHistory();
+
+  React.useEffect(() => {
+    if (!game) return;
+
+    const checkIfHost = async () => {
+      const user = await getUser();
+      if(!user || user.sub !== game.organizerId) {
+        history.push("/");
+      } else {
+        setIsHost(true);
+      }
+    };
+    checkIfHost();
+  }, [game, history]);
+
+  return isHost;
+}
 
 export const useScreenHeight = () => {
   const [height, setHeight] = React.useState(0);
