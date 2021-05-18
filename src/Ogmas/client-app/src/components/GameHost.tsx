@@ -1,4 +1,4 @@
-import { array, task, taskEither } from "fp-ts";
+import { array, taskEither } from "fp-ts";
 import { flow, pipe } from "fp-ts/lib/function";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
@@ -72,7 +72,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
       getGameType(hostedGame.gameTypeId),
       foldError(addAlert, setGameData)
     );
-    
+
     checkIfHost();
     getGameData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
