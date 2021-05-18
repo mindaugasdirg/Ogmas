@@ -5,12 +5,13 @@ import { NavMenu } from './NavMenu';
 
 interface Props {
   children: React.ReactNode;
+  maxWidth?: "md" | "xs" | "sm" | "lg" | "xl";
 }
 
 export const Layout = (props: Props) => (
   <div>
     <NavMenu />
-    <Container maxWidth="md">
+    <Container maxWidth={props.maxWidth || "md"}>
       <CssBaseline/>
       <div>
         {props.children}

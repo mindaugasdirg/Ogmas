@@ -94,3 +94,17 @@ export const useAuthorizeComponent = () => {
     redirectIfUnauthorized();
   }, [history]);
 };
+
+export const useScreenHeight = () => {
+  const [height, setHeight] = React.useState(0);
+
+  React.useEffect(() => {
+    const update = () => setHeight(window.innerHeight);
+
+    window.addEventListener("resize", update);
+    update();
+    return () => window.removeEventListener("resize", update);
+  })
+
+  return height;
+};
