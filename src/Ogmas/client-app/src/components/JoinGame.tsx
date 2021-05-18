@@ -1,5 +1,4 @@
 import Typography from "@material-ui/core/Typography";
-import { AddAlert } from "@material-ui/icons";
 import { task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import React, { Fragment } from "react";

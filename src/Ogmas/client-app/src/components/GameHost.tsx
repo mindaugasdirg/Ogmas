@@ -1,7 +1,7 @@
 import { array, taskEither } from "fp-ts";
 import { flow, pipe } from "fp-ts/lib/function";
 import React from "react";
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
 import { Game, GameData, Player, Question } from "../types/types";
 import { Fragment } from "react";
@@ -11,7 +11,6 @@ import { GameSetup } from "./GameSetup";
 import { PlayersList } from "./PlayersList";
 import { QuestionsList } from "./QuestionsList";
 import { foldError } from "../functions/utils";
-import { getUser } from "../clients/AuthorizationClient";
 
 interface RouteParams {
   game: string;
