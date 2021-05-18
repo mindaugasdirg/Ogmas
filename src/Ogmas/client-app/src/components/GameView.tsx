@@ -104,9 +104,9 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
         right => {
           setQuestions([...questions.filter(x => x.id !== selectedQuestion.id), { ...selectedQuestion, answered: true }]);
           safeCall(removeSelected)();
-          setSelectedQuestion(undefined);
         }
       ),
+      task.map(task.fromIO(() => setSelectedQuestion(undefined))),
       task.map(task.fromIO(() => { setShowMap(true); }))
     );
     await sendAnswer();
@@ -124,6 +124,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   };
 
   const renderView = ({ questions: definedQuestions, player: definedPlayer }: { questions: Question[]; player: Player }) => {
+    console.log(definedPlayer.startTime.getTime(), new Date().getTime());
     if(definedPlayer.startTime.getTime() > new Date().getTime()) {
       return <Typography variant="body1">You start at {definedPlayer.startTime.toLocaleString()}</Typography>
     }

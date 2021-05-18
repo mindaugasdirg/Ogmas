@@ -1,10 +1,11 @@
 import Typography from "@material-ui/core/Typography";
 import { task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
-import React from "react";
+import React, { Fragment } from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 import { joinGame } from "../clients/ApiClient";
-import { useAuthorizeComponent } from "../functions/hooks";
+import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
+import { AlertsContainer } from "./AlertsContainer";
 
 interface RouteParams {
   game: string;
@@ -12,6 +13,7 @@ interface RouteParams {
 
 export const JoinGame = (props: RouteComponentProps<RouteParams>) => {
   const history = useHistory();
+  const [addAlert, setAddAlert] = useErrorHelper();
 
   useAuthorizeComponent();
 
@@ -19,7 +21,7 @@ export const JoinGame = (props: RouteComponentProps<RouteParams>) => {
     pipe(
       joinGame(props.match.params.game),
       taskEither.fold(
-        left => task.fromIO(() => console.log("Error joining game: ", left)),
+        left => task.fromIO(() => addAlert(`Error while joining game: ${left.message}`, "error")),
         right => task.fromIO(() => {
           console.log("game joined");
           console.log("player ID: ", right.id);
@@ -27,7 +29,13 @@ export const JoinGame = (props: RouteComponentProps<RouteParams>) => {
         })
       )
     )();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.match.params.game, history]);
 
-  return <Typography>Joining game...</Typography>;
+  return (
+    <Fragment>
+      <Typography>Joining game...</Typography>
+      <AlertsContainer setter={setAddAlert} />
+    </Fragment>
+  );
 }

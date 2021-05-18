@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Ogmas.Authorization.Handlers;
 using Ogmas.Exceptions;
 using Ogmas.Models.Entities;
 using Ogmas.Repositories;
@@ -54,6 +56,8 @@ namespace Ogmas
             services.AddTransient<IAnswersService, AnswersService>();
             services.AddTransient<IGamesService, GamesService>();
             services.AddTransient<IPlayersService, PlayersService>();
+            services.AddSingleton<IAuthorizationHandler, GameParticipantAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, OrganizedGameAuthorizationHandler>();
 
             services.AddRazorPages();
 

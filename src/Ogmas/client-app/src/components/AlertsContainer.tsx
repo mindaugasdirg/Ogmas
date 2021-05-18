@@ -24,7 +24,7 @@ export const AlertsContainer = (props: Props) => {
   React.useEffect(() => {
     props.setter(() => (message: string, severity: SeverityTypes) => {
       console.log("adding notification");
-      setMessages(prev => [...prev, { message, severity }]);
+      setMessages(prev => [...prev, { message: message || "Unkown error has occured", severity }]);
       setOpen(true);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps

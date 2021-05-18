@@ -24,7 +24,6 @@ const getUserManager = memoize(async () => new UserManager(await getUserManagerS
 
 export const isAuthenticated = async () => {
   const user = await getUser();
-  console.log(user);
   return !!user;// && user.exp > Date.now() + (2 * 60 * 1000);
 }
 
