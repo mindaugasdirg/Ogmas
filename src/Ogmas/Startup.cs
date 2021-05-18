@@ -54,6 +54,8 @@ namespace Ogmas
             services.AddTransient<IGamesService, GamesService>();
             services.AddTransient<IPlayersService, PlayersService>();
 
+            services.AddRazorPages();
+
             services.AddDefaultIdentity<User>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
