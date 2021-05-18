@@ -2,13 +2,14 @@ import 'ol/ol.css';
 import React, { Fragment } from "react";
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
-import { useFeature, useGeolocation, useMap, useSelect, useVectorLayer } from "../functions/hooks";
+import { useFeature, useGeolocation, useMap, useScreenHeight, useSelect, useVectorLayer } from "../functions/hooks";
 import Circle from 'ol/geom/Circle';
 import { Feature } from 'ol';
 import Fab from '@material-ui/core/Fab';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import { FabHolder } from './FabHolder';
 import { Question } from '../types/types';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 
 interface Props {
   questions: Question[];
@@ -17,6 +18,9 @@ interface Props {
 }
 
 export const Map = (props: Props) => {
+  const theme = useTheme();
+  const wideScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  const screenHeight = useScreenHeight();
   const map = useMap("map");
   const [selectedFeature, setSelectedFeature] = React.useState<Feature>();
   const accuracyFeature = useFeature();
@@ -105,7 +109,7 @@ export const Map = (props: Props) => {
       <FabHolder side="right">
         <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
       </FabHolder>
-      <div id="map" style={{ height: "640px" }}>
+      <div id="map" style={{ height: `${screenHeight - (wideScreen ? 64 : 54)}px` }}>
       </div>
     </Fragment>
   );

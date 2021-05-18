@@ -1,4 +1,4 @@
-import { task, taskEither } from "fp-ts";
+import { task } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import React, { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -15,7 +15,7 @@ import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Card from "@material-ui/core/Card";
 import { CardContent, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { safeCall } from "../functions/utils";
+import { foldError, safeCall } from "../functions/utils";
 
 interface RouteParams {
   player: string;
@@ -36,10 +36,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   React.useEffect(() => {
     const getGamePlayer = pipe(
       getPlayer(props.match.params.player),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setPlayer(right))
-      )
+      foldError(addAlert, setPlayer)
     );
     getGamePlayer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,10 +47,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
 
     const getCurrentGame = pipe(
       getGame(player.gameId),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setGame(right))
-      )
+      foldError(addAlert, setGame)
     );
     getCurrentGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,10 +58,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
 
     const getGameData = pipe(
       getGameType(game.gameTypeId),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setGameData(right))
-      )
+      foldError(addAlert, setGameData)
     );
     getGameData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,10 +69,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
 
     const getGameQuestions = pipe(
       getQuestions(gameData.id),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => setQuestions(right))
-      )
+      foldError(addAlert, setQuestions)
     );
     getGameQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,10 +80,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
 
     const sendGameFinish = pipe(
       finishGame(player.id, new Date()),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => { })
-      )
+      foldError(addAlert, () => { })
     );
 
     const allAnswered = questions.length > 0 && questions.every(x => x.answered);
@@ -115,13 +100,12 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
 
     const sendAnswer = pipe(
       submitAnswer(game.id, selectedQuestion.id, answer),
-      taskEither.fold(
-        left => task.fromIO(() => addAlert(left.message, "error")),
-        right => task.fromIO(() => {
+      foldError(addAlert,
+        right => {
           setQuestions([...questions.filter(x => x.id !== selectedQuestion.id), { ...selectedQuestion, answered: true }]);
           safeCall(removeSelected)();
           setSelectedQuestion(undefined);
-        })
+        }
       ),
       task.map(task.fromIO(() => { setShowMap(true); }))
     );

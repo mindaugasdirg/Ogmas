@@ -35,11 +35,24 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+const getClass = (classes: ReturnType<typeof useStyles>, name: Props["side"]) => {
+  switch(name) {
+    case "left":
+      return classes.containerLeft;
+      case "right":
+      return classes.containerRight;
+      case "topLeft":
+      return classes.containerTopLeft;
+      case "topRight":
+      return classes.containerTopRight;
+  }
+}
+
 export const FabHolder = (props: Props) => {
   const classes = useStyles();
 
   return (
-    <div className={props.side === "left" ? classes.containerLeft : classes.containerRight}>
+    <div className={getClass(classes, props.side)}>
       {props.children}
     </div>
   );

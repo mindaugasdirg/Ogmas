@@ -47,12 +47,15 @@ namespace Ogmas
             services.AddTransient<IUserRepository, UserRepository>();
 
             // services
+            services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IGameTypesService, GameTypesService>();
             services.AddTransient<IGameTasksService, GameTasksService>();
             services.AddTransient<IAnswersService, AnswersService>();
             services.AddTransient<IGamesService, GamesService>();
             services.AddTransient<IPlayersService, PlayersService>();
+
+            services.AddRazorPages();
 
             services.AddDefaultIdentity<User>(options =>
             {

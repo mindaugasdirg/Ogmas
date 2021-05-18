@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Ogmas.Authorization.Requirements;
 using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Models.Dtos.Get;
@@ -14,15 +17,20 @@ namespace Ogmas.Services
 {
     public class GamesService : IGamesService
     {
+        private readonly IAuthorizationService authorizationService;
         private readonly IMapper mapper;
         private readonly IOrganizedGamesRepository organizedGamesRepository;
         private readonly IGamesRepository gamesRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public GamesService(IMapper _mapper, IOrganizedGamesRepository _organizedGamesRepository, IGamesRepository _gamesRepository)
+        public GamesService(IAuthorizationService _authorizationService, IMapper _mapper, IOrganizedGamesRepository _organizedGamesRepository,
+                            IGamesRepository _gamesRepository, IHttpContextAccessor _httpContextAccessor)
         {
+            authorizationService = _authorizationService;
             mapper = _mapper;
             organizedGamesRepository = _organizedGamesRepository;
             gamesRepository = _gamesRepository;
+            httpContextAccessor = _httpContextAccessor;
         }
 
         public async Task<OrganizedGameResponse> CreateGame(string userId, HostGameOptions options)
@@ -42,6 +50,11 @@ namespace Ogmas.Services
             var game = organizedGamesRepository.Get(id);
             if(game is null)
                 throw new NotFoundException("hosted game does not exist");
+
+            var userClaims = httpContextAccessor.HttpContext.User;
+            var authorizeResult = await authorizationService.AuthorizeAsync(null, game, new [] { new HostRequirement() });
+            if(!authorizeResult.Succeeded)
+                throw new ForbiddenException("User is not host");
 
             if(game.StartTime.CompareTo(DateTime.UtcNow) <= 0)
             {
