@@ -47,6 +47,7 @@ namespace Ogmas
             services.AddTransient<IUserRepository, UserRepository>();
 
             // services
+            services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IGameTypesService, GameTypesService>();
             services.AddTransient<IGameTasksService, GameTasksService>();

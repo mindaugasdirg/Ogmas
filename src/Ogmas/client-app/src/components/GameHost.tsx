@@ -1,7 +1,7 @@
 import { array, task, taskEither } from "fp-ts";
 import { flow, pipe } from "fp-ts/lib/function";
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 import { getAnswers, getGame, getGameType, getPlayers, getQuestions, getUsername } from "../clients/ApiClient";
 import { Game, GameData, Player, Question } from "../types/types";
 import { Fragment } from "react";
@@ -11,6 +11,7 @@ import { GameSetup } from "./GameSetup";
 import { PlayersList } from "./PlayersList";
 import { QuestionsList } from "./QuestionsList";
 import { foldError } from "../functions/utils";
+import { getUser } from "../clients/AuthorizationClient";
 
 interface RouteParams {
   game: string;
@@ -23,6 +24,7 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   const [players, setPlayers] = React.useState<Player[]>();
   const [namedPlayers, setNamedPlayers] = React.useState<Player[]>([]);
   const [addAlert, setAddAlert] = useErrorHelper();
+  const history = useHistory();
 
   useAuthorizeComponent();
 
@@ -59,10 +61,19 @@ export const GameHost = (props: RouteComponentProps<RouteParams>) => {
   React.useEffect(() => {
     if (!hostedGame) return;
 
+    const checkIfHost = async () => {
+      const user = await getUser();
+      if(!user || user.sub !== hostedGame.organizerId) {
+        history.push("/");
+      }
+    }
+
     const getGameData = pipe(
       getGameType(hostedGame.gameTypeId),
       foldError(addAlert, setGameData)
     );
+    
+    checkIfHost();
     getGameData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hostedGame]);

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Ogmas.Authorization.Requirements;
 using Ogmas.Exceptions;
 using Ogmas.Models.Dtos.Get;
 using Ogmas.Models.Entities;
@@ -13,6 +16,7 @@ namespace Ogmas.Services
 {
     public class PlayersService : IPlayersService
     {
+        private readonly IAuthorizationService authorizationService;
         private readonly IMapper mapper;
         private readonly IGameParticipantsRepository gameParticipantsRepository;
         private readonly IOrganizedGamesRepository organizedGamesRepository;
@@ -20,11 +24,14 @@ namespace Ogmas.Services
         private readonly IGamesRepository gamesRepository;
         private readonly ITaskAnswersRepository taskAnswersRepository;
         private readonly IUserRepository userRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public PlayersService(IMapper _mapper, IGameParticipantsRepository _gameParticipantsRepository, IOrganizedGamesRepository _organizedGamesRepository,
-                              ISubmitedAnswersRepository _submitedAnswersRepository, IGamesRepository _gamesRepository, ITaskAnswersRepository _taskAnswersRepository,
-                              IUserRepository _userRepository)
+        public PlayersService(IAuthorizationService _authorizationService, IMapper _mapper, IGameParticipantsRepository _gameParticipantsRepository,
+                              IOrganizedGamesRepository _organizedGamesRepository, ISubmitedAnswersRepository _submitedAnswersRepository,
+                              IGamesRepository _gamesRepository, ITaskAnswersRepository _taskAnswersRepository, IUserRepository _userRepository,
+                              IHttpContextAccessor _httpContextAccessor)
         {
+            authorizationService = _authorizationService;
             mapper = _mapper;
             gameParticipantsRepository = _gameParticipantsRepository;
             organizedGamesRepository = _organizedGamesRepository;
@@ -32,6 +39,7 @@ namespace Ogmas.Services
             gamesRepository = _gamesRepository;
             taskAnswersRepository = _taskAnswersRepository;
             userRepository = _userRepository;
+            httpContextAccessor = _httpContextAccessor;
         }
 
         public IEnumerable<SubmitedAnswerResponse> GetPlayerAnswers(string gameId, string userId)
@@ -109,6 +117,11 @@ namespace Ogmas.Services
             var player = gameParticipantsRepository.GetParticipantByGameAndUser(gameId, playerId);
             if(player is null)
                 throw new NotFoundException("Player is not in the game");
+
+            var userClaims = httpContextAccessor.HttpContext.User;
+            var authorizeResult = await authorizationService.AuthorizeAsync(userClaims, player, new [] { new PlayerRequirement() });
+            if(!authorizeResult.Succeeded)
+                throw new ForbiddenException("Cannot submit answer for other player");
 
             var answered = submitedAnswersRepository.Filter(x => x.GameId == gameId && x.PlayerId == player.Id && x.QuestionId == questionId);
             if(answered.Count() != 0)
