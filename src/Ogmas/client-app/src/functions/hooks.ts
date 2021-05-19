@@ -15,6 +15,7 @@ import { safeCall } from "./utils";
 import { Game, SeverityTypes } from "../types/types";
 import { useHistory } from "react-router-dom";
 import { getUser, isAuthenticated } from "../clients/AuthorizationClient";
+import { ApplicationPaths } from "../ApiAuthorizationConstants";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();

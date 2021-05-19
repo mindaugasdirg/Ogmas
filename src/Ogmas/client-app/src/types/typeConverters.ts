@@ -3,7 +3,7 @@ import { pipe } from "fp-ts/lib/function";
 import { Game, GameDto, Player, PlayerDto, TypedError } from "./types";
 
 const validateDateString = (date: string): either.Either<TypedError, Date> => {
-  const timestamp = Date.parse(date);
+  const timestamp = Date.parse(date.endsWith("Z") ? date : `${date}Z`);
   if(!timestamp || isNaN(timestamp)) {
     return either.left(new TypedError("ParseError", "start time is invalid date"));
   }
@@ -36,7 +36,8 @@ export const parsePlayer = (response: PlayerDto): either.Either<TypedError, Play
       startTime,
       finishTime,
       gameId: response.gameId,
-      playerId: response.playerId
+      playerId: response.playerId,
+      score: 0
     }))
   );
 };

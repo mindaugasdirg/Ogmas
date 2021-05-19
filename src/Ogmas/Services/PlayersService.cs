@@ -42,9 +42,9 @@ namespace Ogmas.Services
             httpContextAccessor = _httpContextAccessor;
         }
 
-        public IEnumerable<SubmitedAnswerResponse> GetPlayerAnswers(string gameId, string userId)
+        public IEnumerable<SubmitedAnswerResponse> GetPlayerAnswers(string gameId, string playerId)
         {
-            var player = gameParticipantsRepository.Filter(x => x.GameId == gameId && x.PlayerId == userId).FirstOrDefault();
+            var player = gameParticipantsRepository.Filter(x => x.GameId == gameId && x.Id == playerId).FirstOrDefault();
             if(player is null)
                 throw new NotFoundException("User does not participate in the game");
             var answers = submitedAnswersRepository.GetAnswersByPlayer(player.Id);
