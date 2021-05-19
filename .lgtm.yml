@@ -1,5 +1,8 @@
 # LGTM configuration file
 # Needed to configure .NET Core extraction as it failes to do it automatically
+path_classifiers:
+  library:
+    - src/Ogmas/wwwroot/**
 extraction:
   csharp:
     prepare:
