@@ -8,7 +8,8 @@ namespace Ogmas.Profiles
     {
         public SubmitedAnswerProfile()
         {
-            CreateMap<SubmitedAnswer, SubmitedAnswerResponse>();
+            CreateMap<SubmitedAnswer, SubmitedAnswerResponse>()
+                .ForMember(d => d.IsCorrect, opt => opt.MapFrom(s => s.PickedAnswer.IsCorrect));
         }
     }
 }

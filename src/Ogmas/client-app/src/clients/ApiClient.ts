@@ -2,7 +2,7 @@ import { array, taskEither } from "fp-ts";
 import { either } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import { parseGame, parsePlayer } from "../types/typeConverters";
-import { Answer, GameDto, GameType, PlayerDto, Question } from "../types/types";
+import { Answer, GameDto, GameType, PickedAnswer, PlayerDto, Question } from "../types/types";
 import { getAccessTokenFp } from "./AuthorizationClient";
 import { getRequest, getTextRequest, patchRequestWithoutResult, postRequest, postRequestWithoutResult } from "./request";
 
@@ -122,10 +122,19 @@ export const getUsername = (playerId: string) => {
 
 export const joinGame = (gameId: string) => {
   const makeRequest = (headers: ApiHeaders) => postRequest<PlayerDto>(`/api/games/${gameId}/players`, undefined, headers);
-
+  
   return pipe(
     getRequestHeaders(),
     taskEither.chain(makeRequest),
     taskEither.chainEitherK(parsePlayer)
-  );
-}
+    );
+  }
+  
+  export const getPlayerAnswers = (gameId: string, playerId: string) => {
+    const makeRequest = (headers: ApiHeaders) => getRequest<PickedAnswer[]>(`/api/games/${gameId}/players/${playerId}/answers`, headers);
+  
+    return pipe(
+      getRequestHeaders(),
+      taskEither.chain(makeRequest),
+    );
+  }

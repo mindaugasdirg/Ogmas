@@ -58,6 +58,7 @@ export interface Player {
   gameId: string;
   playerId: string;
   name?: string;
+  score: number;
 }
 
 export interface GameData {
@@ -81,6 +82,15 @@ export interface Question {
   radius: number;
   answered?: true;
   answers?: Answer[];
+}
+
+export interface PickedAnswer {
+  id: string;
+  gameId: string;
+  playerId: string;
+  pickedAnswerId: string;
+  questionId: string;
+  isCorrect: boolean;
 }
 
 export type SeverityTypes = Required<AlertProps["severity"]>;

@@ -1,8 +1,8 @@
-import { task } from "fp-ts";
+import { array, task, taskEither } from "fp-ts";
 import { pipe } from "fp-ts/lib/function";
 import React, { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { finishGame, getGame, getGameType, getPlayer, getQuestions, submitAnswer } from "../clients/ApiClient";
+import { finishGame, getGame, getGameType, getPlayer, getPlayerAnswers, getQuestions, submitAnswer } from "../clients/ApiClient";
 import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
 import { Game, GameData, Player, Question, TypedError } from "../types/types";
 import { AlertsContainer } from "./AlertsContainer";
@@ -26,12 +26,26 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   const [gameData, setGameData] = React.useState<GameData>();
   const [player, setPlayer] = React.useState<Player>();
   const [questions, setQuestions] = React.useState<Question[]>([]);
+  const [leftQuestions, setLeftQuestions] = React.useState<Question[]>([]);
+  const [answeredQuestions, setAnsweredQuestions] = React.useState<string[]>([]);
   const [selectedQuestion, setSelectedQuestion] = React.useState<Question>();
   const [showMap, setShowMap] = React.useState(true);
   const [removeSelected, setRemoveSelected] = React.useState<() => void>();
   const [addAlert, setAddAlert] = useErrorHelper();
 
   useAuthorizeComponent();
+
+  React.useEffect(() => {
+    if(!game || !player) return;
+
+    const getAnswered = pipe(
+      getPlayerAnswers(game.id, player.id),
+      taskEither.map(array.map(answer => answer.questionId)),
+      foldError(addAlert, setAnsweredQuestions)
+    );
+    getAnswered();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game, player]);
 
   React.useEffect(() => {
     const getGamePlayer = pipe(
@@ -76,14 +90,15 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
   }, [gameData]);
 
   React.useEffect(() => {
-    if (!player) return;
+    if (!player || player.finishTime) return;
 
     const sendGameFinish = pipe(
       finishGame(player.id, new Date()),
       foldError(addAlert, () => { })
     );
 
-    const allAnswered = questions.length > 0 && questions.every(x => x.answered);
+    console.log("questions: ", questions.length, answeredQuestions.length);
+    const allAnswered = questions.length > 0 && questions.length === answeredQuestions.length;
     if (allAnswered) {
       console.log("finishing game");
       sendGameFinish();
@@ -91,8 +106,15 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, questions]);
 
+  React.useEffect(() => {
+    if(!questions) return;
+
+    console.log(answeredQuestions);
+    setLeftQuestions(questions.filter(question => !answeredQuestions.find(answered => answered === question.id)));
+  }, [questions, answeredQuestions]);
+
   const handleAnswer = async (answer: string) => {
-    if (!game) return;
+    if (!game || !player) return;
     if (!selectedQuestion) {
       addAlert("No question circle is selected", "error");
       return;
@@ -102,7 +124,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
       submitAnswer(game.id, selectedQuestion.id, answer),
       foldError(addAlert,
         right => {
-          setQuestions([...questions.filter(x => x.id !== selectedQuestion.id), { ...selectedQuestion, answered: true }]);
+          setAnsweredQuestions(prev => [ ...prev, selectedQuestion.id ]);
           safeCall(removeSelected)();
         }
       ),
@@ -123,10 +145,13 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
     setShowMap(!showMap);
   };
 
-  const renderView = ({ questions: definedQuestions, player: definedPlayer }: { questions: Question[]; player: Player }) => {
-    console.log(definedPlayer.startTime.getTime(), new Date().getTime());
+  const renderView = ({ leftQuestions: definedQuestions, player: definedPlayer }: { leftQuestions: Question[]; player: Player }) => {
     if(definedPlayer.startTime.getTime() > new Date().getTime()) {
-      return <Typography variant="body1">You start at {definedPlayer.startTime.toLocaleString()}</Typography>
+      setTimeout(() => window.location.reload(), definedPlayer.startTime.getTime() - new Date().getTime());
+      return <Typography variant="body1">You start at {definedPlayer.startTime.toLocaleString()}</Typography>;
+    }
+    if(definedPlayer.finishTime) {
+      return <Typography variant="body1">Congratulations! You finished the game!</Typography>;
     }
 
     return (
@@ -154,7 +179,7 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
 
   return (
     <div>
-      <Loader resource={{ questions, gameData, game, player } as any} condition={(data: any) => data && data.game && data.gameData && data.questions?.length} render={renderView} />
+      <Loader resource={{ leftQuestions, gameData, game, player } as any} condition={(data: any) => data && data.game && data.gameData && data.leftQuestions?.length} render={renderView} />
       <AlertsContainer setter={setAddAlert} />
     </div>
   );

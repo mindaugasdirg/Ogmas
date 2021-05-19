@@ -6,6 +6,7 @@ namespace Ogmas.Models.Dtos.Get
         public string GameId { get; set; }
         public string PlayerId { get; set; }
         public string PickedAnswerId { get; set; }
+        public string QuestionId { get; set; }
         public bool IsCorrect { get; set; }
     }
 }

@@ -57,7 +57,7 @@ export const PlayersList = (props: Props) => {
               <TableCell>{p.name || p.id}</TableCell>
               <TableCell>{p.startTime.toLocaleString()}</TableCell>
               <TableCell>{p.finishTime ? p.finishTime.toLocaleString() : ""}</TableCell>
-              <TableCell>{p.finishTime ? Math.floor((p.finishTime.getTime() - p.startTime.getTime()) / 1000) : 0}</TableCell>
+              <TableCell>{p.score}</TableCell>
             </TableRow>
           ))(players)}
         </TableBody>
