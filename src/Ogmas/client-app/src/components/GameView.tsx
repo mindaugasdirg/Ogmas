@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { finishGame, getGame, getGameType, getPlayer, getPlayerAnswers, getQuestions, submitAnswer } from "../clients/ApiClient";
 import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
-import { Game, GameData, PickedAnswer, Player, Question, TypedError } from "../types/types";
+import { Game, GameData, Player, Question, TypedError } from "../types/types";
 import { AlertsContainer } from "./AlertsContainer";
 import { Loader } from "./Loader";
 import { Map } from "./Map";
