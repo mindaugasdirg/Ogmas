@@ -2,13 +2,14 @@
 # Needed to configure .NET Core extraction as it failes to do it automatically
 path_classifiers:
   library:
-    - src/Ogmas/wwwroot/**
+  - "src/Ogmas/wwwroot/**/*"
+  - "src/Ogmas/wwwroot/*"
 extraction:
   csharp:
     prepare:
       packages:
-        - nodejs
-        - npm
+      - "nodejs"
+      - "npm"
     index:
       dotnet:
-        version: 3.1.406
+        version: "3.1.406"
