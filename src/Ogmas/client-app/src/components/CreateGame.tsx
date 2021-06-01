@@ -20,6 +20,7 @@ import { createGame, getGameTypes } from "../clients/ApiClient";
 import { useHistory } from "react-router";
 import { AlertsContainer } from "./AlertsContainer";
 import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(3, 0, 2),
+  },
+  fieldButton: {
+    margin: theme.spacing(1, 0, 2),
   },
 }));
 
@@ -61,11 +65,11 @@ export const CreateGame = () => {
     );
 
     updateGameTypes();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const create = async () => {
-    if(!gameType || !startDate || !timeInterval) {
+    if (!gameType || !startDate || !timeInterval) {
       addAlert("All fields must be filled", "error");
       return;
     }
@@ -98,15 +102,16 @@ export const CreateGame = () => {
           <form className={classes.form}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Game type</InputLabel>
-                <Select
-                  value={gameType}
-                  onChange={onGameTypeChange}
-                >
-                  {mapGameTypes(gameTypes)}
-                </Select>
-              </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Game type</InputLabel>
+                  <Select
+                    value={gameType}
+                    onChange={onGameTypeChange}
+                  >
+                    {mapGameTypes(gameTypes)}
+                  </Select>
+                </FormControl>
+                <Button className={classes.fieldButton} color="primary" variant="contained" component={Link} to="/create-game/custom-game">Make your own</Button>
               </Grid>
               <Grid item xs={12}>
                 <DateTimePicker fullWidth ampm={false} variant="inline" label="Start time" value={startDate} onChange={setSelectedDate} />

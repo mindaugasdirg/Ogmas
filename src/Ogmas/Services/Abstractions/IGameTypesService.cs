@@ -7,8 +7,8 @@ namespace Ogmas.Services.Abstractions
 {
     public interface IGameTypesService
     {
-        Task<GameResponse> CreateGame(CreateGameConfiguration gameOptions);
-        IEnumerable<GameResponse> GetGames();
-        GameResponse GetGame(string id);
+        Task<GameResponse> CreateGame(CreateGameConfiguration gameOptions, string user);
+        IEnumerable<GameResponse> GetGames(string user);
+        GameResponse GetGame(string id, string user);
     }
 }
