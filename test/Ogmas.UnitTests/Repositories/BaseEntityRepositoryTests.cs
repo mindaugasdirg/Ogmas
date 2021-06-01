@@ -35,6 +35,7 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
@@ -57,6 +58,7 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
@@ -82,6 +84,7 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
@@ -103,12 +106,14 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
             var item2 = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
@@ -130,12 +135,14 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
             var item2 = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
@@ -154,12 +161,14 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
             var item2 = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
@@ -178,18 +187,21 @@ namespace Ogmas.UnitTests.Repositories
             var item = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
             var item2 = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             };
             var item3 = new Game()
             {
                 Name = "example",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = false
             };

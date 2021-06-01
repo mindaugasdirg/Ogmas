@@ -105,3 +105,25 @@ export class TypedError extends Error {
     super(message);
   }
 }
+
+export interface CreateAnswer {
+  answer: string;
+  isCorrect: boolean;
+  location: string;
+  x?: number;
+  y?: number;
+}
+
+export interface CreateTask {
+  question: string;
+  hint: string;
+  x: number;
+  y: number;
+  radius: number;
+  answers: CreateAnswer[];
+}
+
+export interface GameConfiguration {
+  name: string;
+  tasks: CreateTask[];
+}

@@ -15,11 +15,13 @@ import { safeCall } from "./utils";
 import { Game, SeverityTypes } from "../types/types";
 import { useHistory } from "react-router-dom";
 import { getUser, isAuthenticated } from "../clients/AuthorizationClient";
+import { useMediaQuery, useTheme } from "@material-ui/core";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 useGeoCoords();
 
-export const useMap = (target: string, screenHeight: number, zoom: number = 14, center: [number, number] = [0, 0]) => {
+export const useMap = (target: string, zoom: number = 1, center: [number, number] = [0, 0]) => {
+  const screenHeight = useScreenHeight();
   const [map] = React.useState(new Map({
     // controls: defaultControls().extend([]),
     layers: [
@@ -132,3 +134,10 @@ export const useScreenHeight = () => {
 
   return height;
 };
+
+export const useMapStyles = () => {
+  const theme = useTheme();
+  const wideScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  const screenHeight = useScreenHeight();
+  return { height: `${screenHeight - (wideScreen ? 64 : 54)}px` };
+}

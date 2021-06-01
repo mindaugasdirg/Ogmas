@@ -27,24 +27,26 @@ namespace Ogmas.Services
             taskAnswersRepository = _taskAnswersRepository;
         }
 
-        public async Task<GameResponse> CreateGame(CreateGameConfiguration gameOptions)
+        public async Task<GameResponse> CreateGame(CreateGameConfiguration gameOptions, string user)
         {
-            var game = await gamesRepository.Add(mapper.Map<Game>(gameOptions));
+            var game = mapper.Map<Game>(gameOptions);
+            game.CreatedBy = user;
+            game = await gamesRepository.Add(game);
             await CreateTasks(game.Id, gameOptions.Tasks);
             game.Ready = true;
             game = await gamesRepository.Update(game);
             return mapper.Map<GameResponse>(game);
         }
 
-        public IEnumerable<GameResponse> GetGames()
+        public IEnumerable<GameResponse> GetGames(string user)
         {
-            var games = gamesRepository.GetAll();
+            var games = gamesRepository.Filter(g => g.CreatedBy == user || g.CreatedBy == "");
             return games.Select(g => mapper.Map<GameResponse>(g));
         }
 
-        public GameResponse GetGame(string id)
+        public GameResponse GetGame(string id, string user)
         {
-            var game = gamesRepository.Get(id);
+            var game = gamesRepository.Filter(g => g.Id == id && (g.CreatedBy == user || g.CreatedBy == "")).FirstOrDefault();
             if(game is null)
                 throw new NotFoundException("game does not exist");
             return mapper.Map<GameResponse>(game);

@@ -9,5 +9,8 @@ namespace Ogmas.Models.Entities
 
         [Required]
         public bool Ready { get; set; }
+
+        [Required]
+        public string CreatedBy { get; set; }
     }
 }

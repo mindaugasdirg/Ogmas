@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ogmas.Services.Abstractions;
+using Ogmas.Utilities;
 
 namespace Ogmas.Controllers
 {
@@ -22,7 +23,7 @@ namespace Ogmas.Controllers
         [HttpPost]
         public async Task<IActionResult> JoinGame(string gameId)
         {
-            var user = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var user = HttpContext.User.GetSubClaim();
             var player = await playersService.JoinGame(gameId, user);
             return Created($"{player.Id}", player);
         }

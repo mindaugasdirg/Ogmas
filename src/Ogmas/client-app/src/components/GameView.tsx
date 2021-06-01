@@ -7,7 +7,7 @@ import { useAuthorizeComponent, useErrorHelper } from "../functions/hooks";
 import { Game, GameData, Player, Question, TypedError } from "../types/types";
 import { AlertsContainer } from "./AlertsContainer";
 import { Loader } from "./Loader";
-import { Map } from "./Map";
+import { GameMap } from "./GameMap";
 import { SubmitAnswer } from "./SubmitAnswer";
 import { FabHolder } from './FabHolder';
 import Fab from '@material-ui/core/Fab';
@@ -170,12 +170,12 @@ export const GameView = (props: RouteComponentProps<RouteParams>) => {
           </Fragment>
         }
         {showMap ?
-          <Map questions={definedQuestions.filter(x => !x.answered)} onQuestionSelected={setSelectedQuestion} removeSelectedCallback={callback => setRemoveSelected(() => callback)} /> :
+          <GameMap questions={definedQuestions.filter(x => !x.answered)} onQuestionSelected={setSelectedQuestion} removeSelectedCallback={callback => setRemoveSelected(() => callback)} /> :
           <SubmitAnswer submit={handleAnswer} onError={onError} />
         }
       </Fragment>
     );
-  }
+  };
 
   return (
     <div>

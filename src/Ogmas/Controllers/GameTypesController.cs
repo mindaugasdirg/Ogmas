@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ogmas.Models.Dtos.Create;
 using Ogmas.Services.Abstractions;
+using Ogmas.Utilities;
 
 namespace Ogmas.Controllers
 {
@@ -21,21 +22,24 @@ namespace Ogmas.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGame([FromBody] CreateGameConfiguration gameDto)
         {
-            var created = await gameTypeService.CreateGame(gameDto);
+            var user = User.GetSubClaim();
+            var created = await gameTypeService.CreateGame(gameDto, user);
             return Created($"/api/gametype/{created.Id}", created);
         }
 
         [HttpGet]
         public IActionResult GetGames()
         {
-            var games = gameTypeService.GetGames();
+            var user = User.GetSubClaim();
+            var games = gameTypeService.GetGames(user);
             return Ok(games);
         }
         
         [HttpGet("{id}")]
         public IActionResult GetGame(string id)
         {
-            var game = gameTypeService.GetGame(id);
+            var user = User.GetSubClaim();
+            var game = gameTypeService.GetGame(id, user);
             return Ok(game);
         }
     }

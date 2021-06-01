@@ -40,6 +40,7 @@ namespace Ogmas.UnitTests.Services
             gamesRepositoryMock.Setup(s => s.Get("gameId")).Returns(new Game
             {
                 Id = "gameId",
+                CreatedBy = "user",
                 Ready = true,
                 Name = "test game"
             });

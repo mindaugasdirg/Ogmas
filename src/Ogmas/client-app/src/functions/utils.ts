@@ -16,3 +16,8 @@ export const foldError = <R>(addAlert: (message: string, severity: SeverityTypes
     left => task.fromIO(() => addAlert(left.message, "error")),
     right => task.fromIO(() => rightFunc(right))
   );
+
+export const modifyListItem = <T>(index: number, func: (question: T) => T) => (prev: T[]) =>
+  [...prev.slice(0, index), func(prev[index]), ...prev.slice(index + 1)];
+
+export const handleChange = (setter: (value: string) => void) => (event: React.ChangeEvent<HTMLInputElement>) => setter(event.target.value);

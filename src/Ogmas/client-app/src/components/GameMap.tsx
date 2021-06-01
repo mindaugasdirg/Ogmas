@@ -2,14 +2,13 @@ import 'ol/ol.css';
 import React, { Fragment } from "react";
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
-import { useFeature, useGeolocation, useMap, useScreenHeight, useSelect, useVectorLayer } from "../functions/hooks";
+import { useFeature, useGeolocation, useMap, useMapStyles, useSelect, useVectorLayer } from "../functions/hooks";
 import Circle from 'ol/geom/Circle';
 import { Feature } from 'ol';
 import Fab from '@material-ui/core/Fab';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import { FabHolder } from './FabHolder';
 import { Question } from '../types/types';
-import { useMediaQuery, useTheme } from '@material-ui/core';
 
 interface Props {
   questions: Question[];
@@ -17,11 +16,9 @@ interface Props {
   removeSelectedCallback: (func: () => void) => void;
 }
 
-export const Map = (props: Props) => {
-  const theme = useTheme();
-  const wideScreen = useMediaQuery(theme.breakpoints.up("sm"));
-  const screenHeight = useScreenHeight();
-  const map = useMap("map", screenHeight);
+export const GameMap = (props: Props) => {
+  const mapStyles = useMapStyles();
+  const map = useMap("map");
   const [selectedFeature, setSelectedFeature] = React.useState<Feature>();
   const accuracyFeature = useFeature();
   const positionFeature = useFeature(new Style({
@@ -72,10 +69,11 @@ export const Map = (props: Props) => {
       const position = geolocation.getPosition();
       map.getView().setCenter(position);
     });
-
+    
     geolocation.on("change:position", () => {
       const position = geolocation.getPosition();
       positionFeature.setGeometry(position && new Point(position));
+      map.getView().setCenter(position);
     });
   }, [geolocation, accuracyFeature, positionFeature, map]);
 
@@ -102,6 +100,7 @@ export const Map = (props: Props) => {
   const centerToLocation = () => {
     const position = geolocation.getPosition();
     position && map.getView().setCenter(position);
+    position && map.getView().setZoom(14);
   };
 
   return (
@@ -109,7 +108,7 @@ export const Map = (props: Props) => {
       <FabHolder side="right">
         <Fab color="primary" onClick={centerToLocation}><CenterFocusStrongIcon /></Fab>
       </FabHolder>
-      <div id="map" style={{ height: `${screenHeight - (wideScreen ? 64 : 54)}px` }}>
+      <div id="map" style={mapStyles}>
       </div>
     </Fragment>
   );

@@ -63,6 +63,7 @@ namespace Ogmas.UnitTests.Repositories
             var game = _dbContext.Games.Add(new Game
             {
                 Name = $"game_{Guid.NewGuid()}",
+                CreatedBy = "user",
                 IsDeleted = false,
                 Ready = true
             });
