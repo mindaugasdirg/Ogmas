@@ -32,11 +32,13 @@ namespace Ogmas.UnitTests.Repositories
             await repository.Add(new Game
             {
                 Name = "Example game",
+                CreatedBy = "user",
                 Ready = true
             });
             await repository.Add(new Game
             {
                 Name = "Example game 1",
+                CreatedBy = "user",
                 Ready = false
             });
 

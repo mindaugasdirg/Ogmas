@@ -32,6 +32,7 @@ namespace Ogmas.UnitTests.Repositories
             var game = _dbContext.Add(new Game
             {
                 Name = "Example game",
+                CreatedBy = "user",
                 Ready = true
             });
             _dbContext.SaveChanges();
