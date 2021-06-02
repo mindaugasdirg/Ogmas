@@ -18,7 +18,13 @@
       "sizes": "512x512"
     }
   ],
+  "intent_filters": {
+    "scope_url_scheme": "https",
+    "scope_url_host": "azurewebsites.net",
+    "scope_url_path": "/"
+  },
   "start_url": "/",
+  "scope_url": "/",
   "scope": "/",
   "display": "minimal-ui",
   "theme_color": "#000000",
